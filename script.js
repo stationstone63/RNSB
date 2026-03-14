@@ -564,7 +564,7 @@ const chatbotFlows = {
       {
         type: "step",
         n: 3,
-        text: "<strong>Transaction Type</strong> → <code>CT</code> (Cash Transfer).",
+        text: "<strong>Transaction Type</strong> → <code>CTC</code> (Cash Transfer).",
       },
       { type: "text", text: "<strong>Step A – Debit Side:</strong>" },
       {

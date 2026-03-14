@@ -11,9 +11,7 @@
     <div id="topbar">
       <div class="tb-left">
         <div class="tb-coin">RBI</div>
-        <div class="tb-name">
-          Cyber Security Training Portal <small>· Reserve Bank of India</small>
-        </div>
+        <div class="tb-name">Cyber Security<small>· R B I</small></div>
       </div>
       <div class="tb-right">
         <button
@@ -23,7 +21,7 @@
           "
           style="margin-right: 12px"
         >
-          🏦 RNSB Bank Portal
+          🏦 Bank
         </button>
         <div class="sdot"></div>
         SECURE SESSION
@@ -402,7 +400,7 @@
             Next →
           </button>
           <button class="btn btn-danger btn-sm" onclick="confirmSubmit()">
-            Submit Exam
+            Submit
           </button>
         </div>
       </div>
@@ -527,6 +525,42 @@
     <!-- ████████████████████████████████████████
                   JAVASCRIPT
 ████████████████████████████████████████ -->
+    <!-- ████████████████████████████████████████
+                   CONFIRMATION DIALOG
+███████████████████████████████████████ -->
+    <div id="confirm-dialog" class="dialog-overlay">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <div class="dialog-icon">⚠️</div>
+          <div class="dialog-title">Confirm Exam Submission</div>
+        </div>
+        <div class="dialog-content" id="dialog-message">
+          <div class="dialog-info">
+            <div class="dialog-stats">
+              <div class="stat-item">
+                <div class="stat-label">Answered Questions</div>
+                <div class="stat-value" id="answered-count">0</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Unanswered Questions</div>
+                <div class="stat-value" id="unanswered-count">0</div>
+              </div>
+            </div>
+            <div class="dialog-warning" id="dialog-warning">
+              You have unanswered questions. Submitting now will mark them as
+              incorrect.
+            </div>
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button class="btn btn-ghost" onclick="cancelSubmit()">Cancel</button>
+          <button class="btn btn-danger" onclick="doSubmit(false)">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="rbi-exam.js"></script>
   </body>
 </html>

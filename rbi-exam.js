@@ -1404,17 +1404,34 @@ function updatePalette() {
    SUBMIT
 ══════════════════════════════════════ */
 function confirmSubmit() {
-  const skipped = answers.filter((a) => a === null).length;
-  const msg =
-    skipped > 0
-      ? `You have ${skipped} unanswered question(s).\n\nAre you sure you want to submit?`
-      : "Are you sure you want to submit the exam?";
-  if (confirm(msg)) doSubmit(false);
+  const answered = answers.filter((a) => a !== null).length;
+  const unanswered = answers.filter((a) => a === null).length;
+
+  // Update statistics
+  document.getElementById("answered-count").textContent = answered;
+  document.getElementById("unanswered-count").textContent = unanswered;
+
+  // Show/hide warning
+  const warning = document.getElementById("dialog-warning");
+  if (unanswered > 0) {
+    warning.classList.add("show");
+    warning.textContent = `You have ${unanswered} unanswered question(s). Submitting now will mark them as incorrect.`;
+  } else {
+    warning.classList.remove("show");
+  }
+
+  document.getElementById("confirm-dialog").classList.add("show");
+}
+
+function cancelSubmit() {
+  document.getElementById("confirm-dialog").classList.remove("show");
 }
 
 function doSubmit(autoSubmit) {
   clearInterval(timerID);
   examDone = true;
+  // Hide the dialog
+  document.getElementById("confirm-dialog").classList.remove("show");
   const elapsed =
     examMode === "strict"
       ? 90 * 60 - timeLeft

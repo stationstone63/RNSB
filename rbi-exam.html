@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RBI Cyber Security Awareness Training Simulator</title>
+    <link rel="stylesheet" href="rbi-exam.css" />
+  </head>
+  <body>
+    <!-- ████  TOPBAR  ████ -->
+    <div id="topbar">
+      <div class="tb-left">
+        <div class="tb-coin">RBI</div>
+        <div class="tb-name">
+          Cyber Security Training Portal <small>· Reserve Bank of India</small>
+        </div>
+      </div>
+      <div class="tb-right">
+        <button
+          class="btn btn-primary btn-sm"
+          onclick="window.location.href = 'work.html'"
+          style="margin-right: 12px"
+        >
+          🏦 RNSB Bank Portal
+        </button>
+        <div class="sdot"></div>
+        SECURE SESSION
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 1 — WELCOME
+████████████████████████████████ -->
+    <div id="screen-welcome" class="scr on">
+      <div class="page">
+        <div class="hero">
+          <div>
+            <div class="hero-badge">🏦 RBI Authorised Training Module</div>
+            <h1 class="hero-title">
+              RBI Cyber Security<br />Awareness <em>Training</em><br />Simulator
+            </h1>
+            <p class="hero-desc">
+              A comprehensive practice exam designed to prepare bank employees
+              for RBI-mandated cyber security awareness assessments. Covers RBI
+              frameworks, digital fraud prevention, secure banking practices,
+              and IT security protocols.
+            </p>
+            <div class="btnrow">
+              <button
+                class="btn btn-outline"
+                onclick="gotoScreen('screen-rules')"
+              >
+                📋 Exam Rules
+              </button>
+              <button
+                class="btn btn-primary"
+                onclick="gotoScreen('screen-topics')"
+              >
+                📚 View Topics
+              </button>
+              <button
+                class="btn btn-gold btn-lg"
+                onclick="gotoScreen('screen-start')"
+              >
+                🚀 Start Mock Exam
+              </button>
+            </div>
+          </div>
+          <div class="hpanel">
+            <div class="hrow">
+              <span class="hrow-l">Total Questions</span
+              ><span class="hrow-v gold">100 MCQ</span>
+            </div>
+            <div class="hrow">
+              <span class="hrow-l">Time Allotted</span
+              ><span class="hrow-v">90 Minutes</span>
+            </div>
+            <div class="hrow">
+              <span class="hrow-l">Passing Score</span
+              ><span class="hrow-v grn">70%</span>
+            </div>
+            <div class="hrow">
+              <span class="hrow-l">Difficulty Levels</span
+              ><span class="hrow-v">3 Levels</span>
+            </div>
+            <div class="hrow">
+              <span class="hrow-l">Topics Covered</span
+              ><span class="hrow-v">27 Domains</span>
+            </div>
+            <div class="hrow">
+              <span class="hrow-l">Available Modes</span
+              ><span class="hrow-v">Strict + Practice</span>
+            </div>
+          </div>
+        </div>
+        <div class="feats">
+          <div class="feat">
+            <div class="feat-ic">🎯</div>
+            <div class="feat-t">Scenario Based</div>
+            <div class="feat-d">Real banking and RBI framework questions</div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic">🔀</div>
+            <div class="feat-t">Randomised</div>
+            <div class="feat-d">
+              Questions &amp; options shuffled every attempt
+            </div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic">📊</div>
+            <div class="feat-t">Instant Results</div>
+            <div class="feat-d">Score and review after every attempt</div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic">📖</div>
+            <div class="feat-t">Practice Mode</div>
+            <div class="feat-d">Immediate answer feedback to learn faster</div>
+          </div>
+          <div class="feat">
+            <div class="feat-ic">⏱️</div>
+            <div class="feat-t">Real Timer</div>
+            <div class="feat-d">90-minute countdown with auto-submit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 2 — RULES
+████████████████████████████████ -->
+    <div id="screen-rules" class="scr">
+      <div class="page page-narrow">
+        <div class="stag">Examination Guidelines</div>
+        <h2 class="phead">Exam Rules &amp; Instructions</h2>
+        <p class="psub" style="margin-bottom: 24px">
+          Read all rules carefully before beginning the examination
+        </p>
+
+        <div class="card cardp" style="margin-bottom: 18px">
+          <ul class="rlist">
+            <li class="ritem">
+              <span class="rnum">01</span
+              ><span class="rtext"
+                ><strong>Total Questions:</strong> 100 Multiple Choice Questions
+                covering all RBI cyber security awareness domains.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">02</span
+              ><span class="rtext"
+                ><strong>Time Limit:</strong> 90 Minutes. Exam auto-submits when
+                the countdown reaches zero.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">03</span
+              ><span class="rtext"
+                ><strong>Format:</strong> Each question has four options (A, B,
+                C, D). Select the single correct answer.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">04</span
+              ><span class="rtext"
+                ><strong>Navigation:</strong> Move freely between questions
+                using Previous/Next or the Question Navigator panel.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">05</span
+              ><span class="rtext"
+                ><strong>Passing Marks:</strong> Minimum of
+                <strong>70 out of 100 (70%)</strong> is required to pass.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">06</span
+              ><span class="rtext"
+                ><strong>Difficulty:</strong> 25 Easy · 50 Medium · 25 Hard
+                questions, randomised order each attempt.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">07</span
+              ><span class="rtext"
+                ><strong>Randomisation:</strong> Both question order and option
+                order are shuffled every new attempt.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">08</span
+              ><span class="rtext"
+                ><strong>Results:</strong> Score, percentage, correct/wrong
+                counts, and time used shown immediately after submission.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">09</span
+              ><span class="rtext"
+                ><strong>Review Mode:</strong> After results, review all
+                questions with correct answers and explanations.</span
+              >
+            </li>
+            <li class="ritem">
+              <span class="rnum">10</span
+              ><span class="rtext"
+                ><strong>Practice Mode:</strong> No time limit; correct answer
+                highlights and blinks immediately after each selection.</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="warnbar" style="margin-bottom: 22px">
+          <span style="font-size: 18px; flex-shrink: 0">⚠️</span>
+          <span
+            ><strong>Important:</strong> This simulator is designed to prepare
+            bank employees for RBI cyber security awareness assessments. All
+            content is based on publicly available RBI guidelines and banking IT
+            security best practices.</span
+          >
+        </div>
+
+        <div class="btnrow">
+          <button class="btn btn-ghost" onclick="gotoScreen('screen-welcome')">
+            ← Back
+          </button>
+          <button class="btn btn-gold" onclick="gotoScreen('screen-start')">
+            Proceed to Exam →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 3 — TOPICS
+████████████████████████████████ -->
+    <div id="screen-topics" class="scr">
+      <div class="page">
+        <div class="stag">Exam Syllabus</div>
+        <h2 class="phead">Training Topics Covered</h2>
+        <p class="psub">
+          27 cyber security awareness domains as per RBI guidelines
+        </p>
+        <div class="tgrid" id="topics-grid"></div>
+        <div class="btnrow" style="margin-top: 28px">
+          <button class="btn btn-ghost" onclick="gotoScreen('screen-welcome')">
+            ← Back to Home
+          </button>
+          <button class="btn btn-gold" onclick="gotoScreen('screen-start')">
+            Start Exam →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 4 — START / CONFIGURE
+████████████████████████████████ -->
+    <div id="screen-start" class="scr">
+      <div class="page page-center">
+        <div style="max-width: 520px; width: 100%; text-align: center">
+          <div class="stag" style="justify-content: center; display: flex">
+            Configure Exam Session
+          </div>
+          <h2 class="phead" style="text-align: center; margin-bottom: 6px">
+            Ready to Begin?
+          </h2>
+          <p class="psub" style="text-align: center; margin-bottom: 20px">
+            Choose your preferred mode below
+          </p>
+
+          <div class="card cardp" style="text-align: left; margin-bottom: 16px">
+            <div
+              style="
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--g7);
+                margin-bottom: 8px;
+              "
+            >
+              Exam Mode
+            </div>
+            <div class="modeswitch">
+              <button
+                class="msb on"
+                id="btn-strict"
+                onclick="setMode('strict')"
+              >
+                🔒 Strict Exam
+              </button>
+              <button
+                class="msb"
+                id="btn-practice"
+                onclick="setMode('practice')"
+              >
+                📖 Practice Mode
+              </button>
+            </div>
+            <div class="modedesc" id="mode-desc">
+              <strong>Strict Exam Mode:</strong> 90-minute timer runs. No answer
+              feedback during the exam. Results and review shown only after
+              submission. Mirrors the real RBI assessment experience.
+            </div>
+          </div>
+
+          <div class="cfg-row" style="margin-bottom: 24px">
+            <div class="cfg-card">
+              <div class="cfg-val">100</div>
+              <div class="cfg-lbl">Questions</div>
+            </div>
+            <div class="cfg-card">
+              <div class="cfg-val" style="color: #d97706">90m</div>
+              <div class="cfg-lbl">Time Limit</div>
+            </div>
+            <div class="cfg-card">
+              <div class="cfg-val" style="color: var(--ok)">70%</div>
+              <div class="cfg-lbl">Pass Mark</div>
+            </div>
+          </div>
+
+          <div class="btnrow" style="justify-content: center">
+            <button
+              class="btn btn-ghost"
+              onclick="gotoScreen('screen-welcome')"
+            >
+              ← Back
+            </button>
+            <button class="btn btn-gold btn-lg" onclick="startExam()">
+              🚀 Begin Exam Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 5 — EXAM
+████████████████████████████████ -->
+    <div id="screen-exam" class="scr">
+      <!-- Fixed secondary exam bar -->
+      <div id="exam-bar">
+        <div class="ebar-title">RBI Cyber Security Exam</div>
+        <div class="ebar-prog">
+          <div class="ebar-prog-lbl">
+            <span id="ans-count">0</span> of 100 answered
+          </div>
+          <div class="ebar-prog-track">
+            <div class="ebar-prog-fill" id="prog-fill"></div>
+          </div>
+        </div>
+        <div class="ebar-qnum">Q <span id="cur-qnum">1</span> / 100</div>
+        <div class="ebar-timer" id="exam-timer">90:00</div>
+      </div>
+
+      <!-- Two-column layout -->
+      <div class="exam-wrap">
+        <!-- Main question column -->
+        <div class="exam-col-main">
+          <div class="qcard" id="question-card">
+            <!-- Questions rendered here by JS -->
+            <p style="color: var(--g5); text-align: center; padding: 40px 0">
+              Loading questions...
+            </p>
+          </div>
+        </div>
+
+        <!-- Sidebar navigator -->
+        <div class="exam-col-side">
+          <div class="pal-title">Question Navigator</div>
+          <div class="pal-grid" id="pal-grid"></div>
+          <div class="pal-legend">
+            <div class="pal-leg">
+              <div class="pal-dot" style="background: var(--bd)"></div>
+              Current
+            </div>
+            <div class="pal-leg">
+              <div class="pal-dot" style="background: var(--bm)"></div>
+              Answered
+            </div>
+            <div class="pal-leg">
+              <div
+                class="pal-dot"
+                style="background: var(--soft); border: 1px solid var(--bor)"
+              ></div>
+              Not Answered
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed bottom navigation -->
+      <div class="exam-nav">
+        <button class="btn btn-ghost btn-sm" onclick="prevQuestion()">
+          ← Previous
+        </button>
+        <span class="navmid" id="nav-label">Question 1 of 100</span>
+        <div style="display: flex; gap: 8px">
+          <button class="btn btn-primary btn-sm" onclick="nextQuestion()">
+            Next →
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="confirmSubmit()">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- /screen-exam -->
+
+    <!-- ████████████████████████████████
+     SCREEN 6 — RESULTS
+████████████████████████████████ -->
+    <div id="screen-results" class="scr">
+      <div class="page page-center">
+        <div style="max-width: 620px; width: 100%; text-align: center">
+          <div class="stag" style="justify-content: center; display: flex">
+            Exam Complete
+          </div>
+
+          <div class="ring-wrap">
+            <svg viewBox="0 0 176 176">
+              <circle class="ring-bg" cx="88" cy="88" r="76" />
+              <circle
+                class="ring-fill"
+                id="score-ring"
+                cx="88"
+                cy="88"
+                r="76"
+                stroke-dasharray="477.52"
+                stroke-dashoffset="477.52"
+              />
+            </svg>
+            <div class="ring-pct" id="res-pct">0%</div>
+            <div class="ring-sub">Your Score</div>
+          </div>
+
+          <div class="verdict" id="res-verdict"></div>
+          <div class="status-badge" id="res-badge"></div>
+
+          <div class="res-grid">
+            <div class="res-card">
+              <div class="res-val" id="res-correct" style="color: var(--ok)">
+                —
+              </div>
+              <div class="res-lbl">Correct</div>
+            </div>
+            <div class="res-card">
+              <div class="res-val" id="res-wrong" style="color: var(--er)">
+                —
+              </div>
+              <div class="res-lbl">Wrong / Skipped</div>
+            </div>
+            <div class="res-card">
+              <div class="res-val" id="res-time" style="color: var(--bm)">
+                —
+              </div>
+              <div class="res-lbl">Time Used</div>
+            </div>
+          </div>
+
+          <div class="res-msg" id="res-msg"></div>
+
+          <div class="btnrow" style="justify-content: center">
+            <button class="btn btn-outline" onclick="openReview()">
+              📋 Review Answers
+            </button>
+            <button class="btn btn-primary" onclick="retryExam()">
+              🔄 Retry Exam
+            </button>
+            <button
+              class="btn btn-ghost"
+              onclick="gotoScreen('screen-welcome')"
+            >
+              🏠 Home
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████
+     SCREEN 7 — REVIEW
+████████████████████████████████ -->
+    <div id="screen-review" class="scr">
+      <div class="page">
+        <div class="rev-hdr">
+          <div>
+            <div class="stag">Answer Review</div>
+            <h2 class="phead" style="font-size: clamp(20px, 3vw, 32px)">
+              Review Your Answers
+            </h2>
+          </div>
+          <div class="filterbar">
+            <button class="filtbtn on" onclick="filterReview('all', this)">
+              All
+            </button>
+            <button
+              class="filtbtn"
+              style="color: var(--ok)"
+              onclick="filterReview('correct', this)"
+            >
+              ✔ Correct
+            </button>
+            <button
+              class="filtbtn"
+              style="color: var(--er)"
+              onclick="filterReview('wrong', this)"
+            >
+              ✘ Wrong
+            </button>
+          </div>
+        </div>
+        <div class="rev-list" id="review-list"></div>
+        <div class="btnrow" style="margin-top: 28px">
+          <button class="btn btn-ghost" onclick="gotoScreen('screen-results')">
+            ← Back to Results
+          </button>
+          <button class="btn btn-primary" onclick="retryExam()">
+            🔄 Retry Exam
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████
+                  JAVASCRIPT
+████████████████████████████████████████ -->
+    <script src="rbi-exam.js"></script>
+  </body>
+</html>

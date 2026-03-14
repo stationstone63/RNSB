@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>RNSB – Employee Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="work.css" />
+  </head>
+  <body>
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="loader-emblem">
+        <div class="emblem-ring"></div>
+        <div class="emblem-ring-spin"></div>
+        <div class="emblem-ring-spin2"></div>
+        <div class="emblem-inner">
+          <i class="fa-solid fa-building-columns emblem-icon"></i>
+        </div>
+      </div>
+      <div class="loader-name">Rajkot Nagarik Sahakari<br />Bank Ltd</div>
+      <div class="loader-tagline">Employee Assistant System</div>
+      <div class="loader-progress"><div class="loader-bar"></div></div>
+    </div>
+
+    <!-- GLOBAL SEARCH -->
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-modal">
+        <div class="search-modal-top">
+          <i
+            class="fa-solid fa-magnifying-glass"
+            style="color: var(--gray-400); font-size: 16px"
+          ></i>
+          <input
+            type="text"
+            class="search-modal-input"
+            id="globalSearchInput"
+            placeholder="Search branches, codes, knowledge…"
+            autocomplete="off"
+          />
+          <button class="search-close" onclick="closeSearch()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="search-hint" id="searchHint">
+          <span class="hint-tag" onclick="doSearch('HCASHDEP')"
+            >💰 HCASHDEP</span
+          >
+          <span class="hint-tag" onclick="doSearch('Cash Deposit')"
+            >Cash Deposit</span
+          >
+          <span class="hint-tag" onclick="doSearch('MVCD')">🔐 MVCD</span>
+          <span class="hint-tag" onclick="doSearch('vault')">Vault</span>
+          <span class="hint-tag" onclick="doSearch('HTM')">🔁 HTM</span>
+          <span class="hint-tag" onclick="doSearch('SOL')">SOL ID</span>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <div id="app">
+      <!-- SIDEBAR (desktop) -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div>
+              <div class="sidebar-logo-name">
+                Rajkot Nagarik<br />Sahakari Bank
+              </div>
+              <div class="sidebar-logo-sub">Employee Portal</div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-search-wrap">
+          <i class="fa-solid fa-magnifying-glass sidebar-search-icon"></i>
+          <input
+            type="text"
+            class="sidebar-search"
+            placeholder="Quick search…"
+            onfocus="openSearch()"
+            readonly
+          />
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section-label">Main</div>
+          <div
+            class="sidebar-nav-item active"
+            id="snav-home"
+            onclick="navTo('home')"
+          >
+            <i class="fa-solid fa-house"></i> 🏠 Home
+          </div>
+          <div class="nav-section-label">Bank</div>
+          <div class="sidebar-nav-item" id="snav-bank" onclick="navTo('bank')">
+            <i class="fa-solid fa-building-columns"></i> 🏦 Branches
+            <span class="nav-badge">66</span>
+          </div>
+          <div
+            class="sidebar-nav-item"
+            id="snav-knowledge"
+            onclick="navTo('knowledge')"
+          >
+            <i class="fa-solid fa-book-open"></i> 📚 Knowledge Base
+          </div>
+          <div class="nav-section-label">Structure</div>
+          <div
+            class="sidebar-nav-item"
+            id="snav-hierarchy"
+            onclick="navTo('hierarchy')"
+          >
+            <i class="fa-solid fa-sitemap"></i> 🗂️ Employee Hierarchy
+          </div>
+          <div class="nav-section-label">Roles</div>
+          <div class="sidebar-nav-item" id="snav-role" onclick="navTo('role')">
+            <i class="fa-solid fa-id-badge"></i> 👤 Roles
+          </div>
+          <div
+            class="sidebar-nav-item"
+            id="snav-cashier"
+            onclick="navTo('cashier')"
+          >
+            <i class="fa-solid fa-cash-register"></i> 🧾 Cashier Module
+          </div>
+          <div class="nav-section-label">Training</div>
+          <div
+            class="sidebar-nav-item"
+            id="snav-exam"
+            onclick="window.location.href = 'rbi-exam.html'"
+          >
+            <i class="fa-solid fa-graduation-cap"></i> 📚 RBI Exam Training
+          </div>
+        </nav>
+      </aside>
+
+      <div class="main-content">
+        <!-- MOBILE HEADER -->
+        <header class="mobile-header" id="mobileHeader">
+          <button class="mobile-back" id="mobileBack" onclick="goBack()">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="mobile-header-logo">
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+          <div class="mobile-header-title">
+            <h1 id="mobileTitle">RNSB Assistant</h1>
+            <p id="mobileSub">Employee Portal</p>
+          </div>
+          <div class="mobile-header-actions">
+            <button class="mobile-search-btn" onclick="openSearch()">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <!-- HOME -->
+          <div class="screen active" id="screen-home">
+            <div class="home-hero">
+              <div class="home-role-chip">
+                <i class="fa-solid fa-cash-register"></i> Cashier Role
+              </div>
+              <div class="home-date" id="homeDate"></div>
+              <div class="home-title">👋 Employee Assistant</div>
+              <div class="home-sub">Rajkot Nagarik Sahakari Bank Ltd</div>
+              <div class="home-stats-row">
+                <div class="home-stat">
+                  <div class="home-stat-val">66</div>
+                  <div class="home-stat-label">🏦 Branches</div>
+                </div>
+                <div class="home-stat">
+                  <div class="home-stat-val">8</div>
+                  <div class="home-stat-label">🧾 Codes</div>
+                </div>
+                <div class="home-stat">
+                  <div class="home-stat-val">3</div>
+                  <div class="home-stat-label">👤 Roles</div>
+                </div>
+              </div>
+            </div>
+            <div class="home-search-bar-wrap">
+              <div class="home-search-bar" onclick="openSearch()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search branches, codes, knowledge…</span>
+                <span class="search-kbd">⌘K</span>
+              </div>
+            </div>
+            <div class="section-title">Modules</div>
+            <div class="home-cards-grid">
+              <div class="home-big-card card-bank" onclick="navTo('bank')">
+                <div class="hbc-icon">
+                  <i class="fa-solid fa-building-columns"></i>
+                </div>
+                <div class="hbc-title">🏦 Bank</div>
+                <div class="hbc-desc">Branches & Information</div>
+                <div class="hbc-arrow">
+                  <i class="fa-solid fa-arrow-right"></i>
+                </div>
+              </div>
+              <div class="home-big-card card-role" onclick="navTo('role')">
+                <div class="hbc-icon"><i class="fa-solid fa-id-badge"></i></div>
+                <div class="hbc-title">👤 Roles</div>
+                <div class="hbc-desc">Cashier, Loan & Locker</div>
+                <div class="hbc-arrow">
+                  <i class="fa-solid fa-arrow-right"></i>
+                </div>
+              </div>
+            </div>
+            <div class="section-title">Quick Access</div>
+            <div class="quick-row">
+              <div class="quick-item" onclick="navTo('cashier')">
+                <i
+                  class="fa-solid fa-cash-register"
+                  style="color: var(--success)"
+                ></i
+                ><span>Codes</span>
+              </div>
+              <div class="quick-item" onclick="navTo('knowledge')">
+                <i class="fa-solid fa-book-open" style="color: var(--gold)"></i
+                ><span>Knowledge</span>
+              </div>
+              <div class="quick-item" onclick="openSearch()">
+                <i
+                  class="fa-solid fa-magnifying-glass"
+                  style="color: var(--wa-green)"
+                ></i
+                ><span>Search</span>
+              </div>
+              <div class="quick-item" onclick="navTo('bank')">
+                <i
+                  class="fa-solid fa-location-dot"
+                  style="color: var(--blue)"
+                ></i
+                ><span>Branches</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BANK -->
+          <div class="screen" id="screen-bank">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-building-columns"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >Branch Network 🏦
+              </h2>
+              <p id="branchSubtitle">
+                All 66 branches · Rajkot Nagarik Sahakari Bank
+              </p>
+            </div>
+            <div class="branch-controls">
+              <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  type="text"
+                  class="branch-search"
+                  id="branchSearchInput"
+                  placeholder="Search by code or branch name…"
+                  oninput="filterBranches()"
+                />
+              </div>
+            </div>
+            <div class="branches-grid" id="branchesGrid"></div>
+          </div>
+
+          <!-- KNOWLEDGE -->
+          <div class="screen" id="screen-knowledge">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-book-open"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >Knowledge Base 📚
+              </h2>
+              <p>Employee training & banking fundamentals</p>
+            </div>
+            <div class="knowledge-wrap" id="knowledgeWrap"></div>
+          </div>
+
+          <!-- ROLE -->
+          <div class="screen" id="screen-role">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-id-badge"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >Employee Roles 👤
+              </h2>
+              <p>Select your role to access guides</p>
+            </div>
+            <div class="roles-wrap" id="rolesWrap"></div>
+          </div>
+
+          <!-- CASHIER -->
+          <div class="screen" id="screen-cashier">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-cash-register"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >Cashier Module 🧾
+              </h2>
+              <p>Tap a code to open the AI step guide</p>
+            </div>
+            <div
+              style="
+                background: var(--warning-bg);
+                border: 1px solid var(--warning);
+                border-radius: var(--radius-lg);
+                margin: 14px;
+                padding: 14px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  margin-bottom: 10px;
+                "
+              >
+                <i
+                  class="fa-solid fa-triangle-exclamation"
+                  style="color: var(--warning); font-size: 18px"
+                ></i>
+                <h3
+                  style="
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: var(--warning);
+                  "
+                >
+                  ⚠️ Important Cashier Notes
+                </h3>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Always verify account status before transaction
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Inactive account → First deposit required 💳
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Dormant account → KYC mandatory 📋
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Withdrawal not allowed in dormant account 🚫
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Always check lien amount before withdrawal 🔒
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Available Balance = Ledger Balance - Lien Amount
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Above ₹50K deposit → Save Only 📥
+                </li>
+                <li
+                  style="
+                    padding: 4px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--warning); margin-top: 2px">•</span>
+                  Below ₹50K → Direct Post ✅
+                </li>
+              </ul>
+            </div>
+            <div class="tab-bar" id="cashierTabBar">
+              <button
+                class="tab-btn active"
+                onclick="switchCashierTab('codes', this)"
+              >
+                🧾 Transaction Codes
+              </button>
+              <button
+                class="tab-btn"
+                onclick="switchCashierTab('favorites', this)"
+              >
+                <i class="fa-solid fa-star" style="margin-right: 4px"></i>⭐
+                Favorites
+              </button>
+            </div>
+            <div class="tab-content active" id="ctab-codes">
+              <div class="code-cards-wrap" id="cashierCodesList"></div>
+            </div>
+            <div class="tab-content" id="ctab-favorites">
+              <div class="code-cards-wrap" id="favoritesList"></div>
+            </div>
+          </div>
+
+          <!-- HIERARCHY -->
+          <div class="screen" id="screen-hierarchy">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-sitemap"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >Employee Hierarchy 🗂️
+              </h2>
+              <p>Branch Level Organizational Structure</p>
+            </div>
+            <div style="padding: 16px">
+              <h3
+                style="
+                  font-size: 14px;
+                  font-weight: 700;
+                  margin-bottom: 16px;
+                  color: var(--text);
+                  text-align: center;
+                "
+              >
+                Branch Level Hierarchy
+              </h3>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 0;
+                "
+              >
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-building"
+                      style="font-size: 18px; color: var(--blue)"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700">DCM</span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    🏢 Deputy Chief Manager
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-user-tie"
+                      style="font-size: 18px; color: var(--royal)"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700">BM</span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    👔 Branch Manager
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-chart-line"
+                      style="font-size: 18px; color: var(--gold)"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700"
+                      >Senior Executive</span
+                    >
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    📈 Senior Level
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-folder-open"
+                      style="font-size: 18px; color: var(--success)"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700"
+                      >Junior Executive</span
+                    >
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    📂 Junior Level
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-money-bill-wave"
+                      style="font-size: 18px; color: var(--wa-green)"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700"
+                      >Head Cashier</span
+                    >
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    💰 Vault &amp; Cash Control
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div
+                  class="hierarchy-card"
+                  style="border: 2px solid var(--wa-green); background: #f0fdf4"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-cash-register"
+                      style="font-size: 18px; color: var(--wa-green)"
+                    ></i
+                    ><span
+                      style="
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: var(--wa-green);
+                      "
+                      >Teller Cashier ← You</span
+                    >
+                  </div>
+                  <div style="font-size: 11px; color: var(--wa-green)">
+                    🧾 Frontend Transactions
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-box"
+                      style="font-size: 18px; color: #7c3aed"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700">Peon</span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    📦 General Support
+                  </div>
+                </div>
+                <div class="hierarchy-connector"></div>
+                <div class="hierarchy-card">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-bottom: 6px;
+                    "
+                  >
+                    <i
+                      class="fa-solid fa-wrench"
+                      style="font-size: 18px; color: #ea580c"
+                    ></i
+                    ><span style="font-size: 14px; font-weight: 700"
+                      >Sub Staff</span
+                    >
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted)">
+                    🔧 Maintenance &amp; Support
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHAT SCREEN -->
+          <div class="screen" id="screen-chat" style="padding-bottom: 0">
+            <div class="chat-header">
+              <button class="chat-back-btn" onclick="exitChat()">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <div class="chat-avatar-ring" id="chatAvatarRing">
+                <span id="chatAvatarIcon">💰</span>
+              </div>
+              <div class="chat-header-info">
+                <div class="chat-header-name" id="chatHeaderName">
+                  Step Guide
+                </div>
+                <div class="chat-header-sub">
+                  <span class="chat-online-dot"></span>
+                  <span>Senior Assistant · Active</span>
+                </div>
+              </div>
+              <span class="chat-code-badge pill-green" id="chatCodeBadge"
+                >CODE</span
+              >
+              <button
+                class="chat-favorite-btn"
+                id="chatFavoriteBtn"
+                onclick="toggleFavorite()"
+              >
+                <i class="fa-regular fa-star" id="chatFavoriteIcon"></i>
+              </button>
+            </div>
+            <div class="chat-progress-bar">
+              <div
+                class="chat-progress-fill"
+                id="chatProgressFill"
+                style="width: 0%"
+              ></div>
+            </div>
+            <div class="chat-body" id="chatBody">
+              <div class="chat-date-chip" id="chatDateChip"></div>
+            </div>
+            <div class="chat-footer">
+              <div class="chat-status-bar" id="chatStatusBar">
+                <i class="fa-solid fa-circle-notch fa-spin"></i> Senior is
+                typing…
+              </div>
+              <div class="chat-end-actions" id="chatEndActions">
+                <button class="chat-action-btn" onclick="restartChat()">
+                  <i class="fa-solid fa-rotate-right"></i> 🔄 Restart
+                </button>
+                <button
+                  class="chat-action-btn"
+                  onclick="copyStepsToClipboard()"
+                >
+                  <i class="fa-solid fa-clipboard"></i> 📋 Copy Steps
+                </button>
+                <button class="chat-action-btn primary" onclick="exitChat()">
+                  <i class="fa-solid fa-arrow-left"></i> ← Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end page-content -->
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav">
+          <div class="bottom-nav-inner">
+            <button
+              class="bnav-item active"
+              id="bnav-home"
+              onclick="navTo('home')"
+            >
+              <i class="fa-solid fa-house"></i>Home
+            </button>
+            <button class="bnav-item" id="bnav-bank" onclick="navTo('bank')">
+              <i class="fa-solid fa-building-columns"></i>Bank
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-hierarchy"
+              onclick="navTo('hierarchy')"
+            >
+              <i class="fa-solid fa-sitemap"></i>Hierarchy
+            </button>
+            <button class="bnav-item" id="bnav-role" onclick="navTo('role')">
+              <i class="fa-solid fa-id-badge"></i>Roles
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-cashier"
+              onclick="navTo('cashier')"
+            >
+              <i class="fa-solid fa-cash-register"></i>Cashier
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-exam"
+              onclick="window.location.href = 'RNSB-RBI-Exam.html'"
+            >
+              <i class="fa-solid fa-graduation-cap"></i>Exam
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="work.js"></script>
+  </body>
+</html>

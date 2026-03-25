@@ -135,6 +135,14 @@
           >
             <i class="fa-solid fa-cash-register"></i> 🧾 Cashier Module
           </div>
+          <div class="nav-section-label">Reference</div>
+          <div
+            class="sidebar-nav-item"
+            id="snav-accounts"
+            onclick="navTo('accounts')"
+          >
+            <i class="fa-solid fa-book"></i> 📒 Accounts
+          </div>
           <div class="nav-section-label">Training</div>
           <div
             class="sidebar-nav-item"
@@ -185,12 +193,12 @@
                   <div class="home-stat-label">🏦 Branches</div>
                 </div>
                 <div class="home-stat">
-                  <div class="home-stat-val">8</div>
-                  <div class="home-stat-label">🧾 Codes</div>
+                  <div class="home-stat-val">66</div>
+                  <div class="home-stat-label">💰 Loan Schemes</div>
                 </div>
                 <div class="home-stat">
-                  <div class="home-stat-val">3</div>
-                  <div class="home-stat-label">👤 Roles</div>
+                  <div class="home-stat-val">8</div>
+                  <div class="home-stat-label">🧾 Codes</div>
                 </div>
               </div>
             </div>
@@ -451,6 +459,45 @@
                   <span style="color: var(--warning); margin-top: 2px">•</span>
                   Below ₹50K → Direct Post ✅
                 </li>
+                <li
+                  style="
+                    padding: 6px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                    border-top: 1px dashed rgba(234, 179, 8, 0.3);
+                    margin-top: 6px;
+                  "
+                >
+                  <span style="color: var(--danger); margin-top: 2px">❌</span>
+                  <div>
+                    <strong style="color: var(--danger)"
+                      >CASH NOT ALLOWED</strong
+                    ><br />
+                    <code style="font-size: 12px; color: var(--text-muted)"
+                      >141, 717, 163, 162, 720, 862, 144, 866, 719</code
+                    >
+                  </div>
+                </li>
+                <li
+                  style="
+                    padding: 6px 0;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 13px;
+                  "
+                >
+                  <span style="color: var(--success); margin-top: 2px">✅</span>
+                  <div>
+                    <strong style="color: var(--success)">CASH ALLOWED</strong
+                    ><br />
+                    <code style="font-size: 12px; color: var(--text-muted)"
+                      >540, 539, 639</code
+                    >
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="tab-bar" id="cashierTabBar">
@@ -697,6 +744,64 @@
             </div>
           </div>
 
+          <!-- ACCOUNTS -->
+          <div class="screen" id="screen-accounts">
+            <div class="module-header">
+              <h2>
+                <i
+                  class="fa-solid fa-book"
+                  style="margin-right: 8px; color: var(--gold-light)"
+                ></i
+                >📒 Accounts
+              </h2>
+              <p>Loan Schemes & Codes</p>
+            </div>
+
+            <!-- Loan Accounts Section -->
+            <div class="accounts-section">
+              <div class="accounts-sub-header">
+                <h3>💰 Loan Accounts</h3>
+                <span class="accounts-count-badge" id="accountsCountBadge"
+                  >66 schemes</span
+                >
+              </div>
+
+              <!-- Search Bar -->
+              <div class="accounts-search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  type="text"
+                  class="accounts-search"
+                  id="accountsSearchInput"
+                  placeholder="Search by Scheme Name / Scheme Code / Old GL..."
+                  oninput="filterLoanAccounts()"
+                />
+                <button
+                  class="accounts-search-clear"
+                  id="accountsSearchClear"
+                  onclick="clearAccountsSearch()"
+                  style="display: none"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <!-- Loan Accounts Grid -->
+              <div class="loan-accounts-grid" id="loanAccountsGrid"></div>
+
+              <!-- Empty State -->
+              <div
+                class="loan-accounts-empty"
+                id="loanAccountsEmpty"
+                style="display: none"
+              >
+                <i class="fa-solid fa-search"></i>
+                <p>No loan schemes found</p>
+                <span>Try different keywords</span>
+              </div>
+            </div>
+          </div>
+
           <!-- CHAT SCREEN -->
           <div class="screen" id="screen-chat" style="padding-bottom: 0">
             <div class="chat-header">
@@ -789,6 +894,13 @@
               onclick="navTo('cashier')"
             >
               <i class="fa-solid fa-cash-register"></i>Cashier
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-accounts"
+              onclick="navTo('accounts')"
+            >
+              <i class="fa-solid fa-book"></i>Accounts
             </button>
             <button
               class="bnav-item"

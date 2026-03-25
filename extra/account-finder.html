@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Number Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0d1b2a;
+      --ink:     #1a2e42;
+      --slate:   #2e4a62;
+      --mid:     #4a6b84;
+      --steel:   #6b8fa8;
+      --mist:    #c8dce8;
+      --fog:     #e8f2f8;
+      --white:   #f5f9fc;
+      --accent:  #0077cc;
+      --accent2: #00a86b;
+      --warn:    #e05c2a;
+      --radius:  10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 60px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--navy);
+      color: var(--mist);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    .header-badge span.dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(1.3); }
+    }
+    .header h1 {
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: -.02em;
+      line-height: 1.2;
+    }
+    .header p {
+      margin-top: 8px;
+      color: var(--mid);
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    /* ── CARD ── */
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(13,27,42,.06), 0 12px 40px rgba(13,27,42,.09);
+      overflow: hidden;
+    }
+
+    /* ── TYPE TOGGLE ── */
+    .type-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1.5px solid var(--fog);
+    }
+    .type-btn {
+      padding: 16px 12px;
+      cursor: pointer;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--steel);
+      background: var(--fog);
+      border: none;
+      transition: all .22s ease;
+      position: relative;
+    }
+    .type-btn:first-child { border-right: 1.5px solid var(--mist); }
+    .type-btn .btn-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+    .type-btn .btn-label { display: block; }
+    .type-btn .btn-prefix {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: .06em;
+      color: var(--steel);
+      margin-top: 2px;
+      transition: color .22s;
+    }
+    .type-btn.active {
+      background: #fff;
+      color: var(--navy);
+    }
+    .type-btn.active .btn-prefix { color: var(--accent); }
+    .type-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5px; left: 0; right: 0;
+      height: 2.5px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* ── BODY ── */
+    .card-body { padding: 28px 28px 24px; }
+
+    /* ── INPUT ── */
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+    .input-wrap {
+      position: relative;
+    }
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 48px 14px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      color: var(--navy);
+      background: var(--fog);
+      border: 1.5px solid var(--mist);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    .input-wrap input::-webkit-outer-spin-button,
+    .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .input-wrap input::placeholder { color: var(--steel); opacity:.6; font-weight:400; }
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0,119,204,.10);
+    }
+    .input-wrap input.error {
+      border-color: var(--warn);
+      box-shadow: 0 0 0 3px rgba(224,92,42,.10);
+    }
+    .clear-btn {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer;
+      color: var(--steel);
+      font-size: 18px;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity .2s, color .2s;
+      pointer-events: none;
+    }
+    .clear-btn.visible { opacity:1; pointer-events:all; }
+    .clear-btn:hover { color: var(--warn); }
+
+    /* hint */
+    .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--steel);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 18px;
+      transition: color .2s;
+    }
+    .hint.err { color: var(--warn); }
+    .hint svg { flex-shrink: 0; }
+
+    /* ── CONVERT BUTTON ── */
+    .convert-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      letter-spacing: .02em;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      box-shadow: 0 4px 14px rgba(0,119,204,.28);
+    }
+    .convert-btn:hover {
+      background: #0066b3;
+      box-shadow: 0 6px 20px rgba(0,119,204,.35);
+    }
+    .convert-btn:active { transform: scale(.98); }
+    .convert-btn svg { transition: transform .2s; }
+    .convert-btn:hover svg { transform: translateX(3px); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 20px;
+      color: var(--mist);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content:''; flex:1; height:1px; background:var(--fog);
+    }
+
+    /* ── OUTPUT ── */
+    .output-section { display: none; animation: fadeUp .3s ease; }
+    .output-section.visible { display: block; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .output-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .output-box {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--navy);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-number {
+      flex: 1;
+      padding: 16px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(16px, 4.5vw, 22px);
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: #e6f4ff;
+      word-break: break-all;
+      line-height: 1.3;
+    }
+    .copy-btn {
+      flex-shrink: 0;
+      padding: 0 18px;
+      height: 56px;
+      background: rgba(255,255,255,.07);
+      border: none;
+      border-left: 1px solid rgba(255,255,255,.1);
+      color: var(--mist);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background .2s, color .2s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,.14); color: #fff; }
+    .copy-btn.copied { color: var(--accent2); }
+
+    /* breakdown */
+    .breakdown {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .bd-item {
+      background: var(--fog);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .bd-item .bd-key {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--steel);
+      margin-bottom: 3px;
+    }
+    .bd-item .bd-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: .05em;
+    }
+    .bd-item.full { grid-column: 1 / -1; }
+    .bd-item.accent-green .bd-val { color: var(--accent2); }
+    .bd-item.accent-blue  .bd-val { color: var(--accent); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--navy);
+      color: #e6f4ff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 999;
+      white-space: nowrap;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast-check { color: var(--accent2); font-size: 15px; }
+
+    /* ── RULE CARD ── */
+    .rule-card {
+      margin-top: 28px;
+      background: var(--fog);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      border-left: 3px solid var(--accent);
+    }
+    .rule-card h3 {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .rule-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 12.5px;
+      color: var(--slate);
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+    .rule-item:last-child { margin-bottom: 0; }
+    .rule-item code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      background: var(--mist);
+      color: var(--navy);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--steel);
+    }
+
+    @media (max-width: 420px) {
+      .card-body { padding: 22px 18px 20px; }
+      .breakdown { grid-template-columns: 1fr; }
+      .bd-item.full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-badge"><span class="dot"></span>FINACLE UTILITY</div>
+    <h1>Account Number Converter</h1>
+    <p>Convert short account numbers to full 15-digit format</p>
+  </div>
+
+  <div class="card">
+
+    <!-- TYPE TOGGLE -->
+    <div class="type-toggle">
+      <button class="type-btn active" id="btnSaving" onclick="setType('saving')">
+        <span class="btn-icon">🏦</span>
+        <span class="btn-label">Saving / Current</span>
+        <span class="btn-prefix">PREFIX · 02100310</span>
+      </button>
+      <button class="type-btn" id="btnLoan" onclick="setType('loan')">
+        <span class="btn-icon">💼</span>
+        <span class="btn-label">Loan Account</span>
+        <span class="btn-prefix">PREFIX · 02107170</span>
+      </button>
+    </div>
+
+    <div class="card-body">
+
+      <!-- INPUT -->
+      <div class="field-label">Short Account Number</div>
+      <div class="input-wrap">
+        <input
+          type="text"
+          id="acInput"
+          inputmode="numeric"
+          placeholder="e.g. 213172"
+          autocomplete="off"
+          oninput="onInput(this)"
+          onkeydown="if(event.key==='Enter') doConvert()"
+        />
+        <button class="clear-btn" id="clearBtn" onclick="clearInput()" title="Clear">✕</button>
+      </div>
+      <div class="hint" id="hintText">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="6" cy="6" r="5.5" stroke="currentColor"/>
+          <path d="M6 5v3M6 4h.01" stroke="currentColor" stroke-linecap="round"/>
+        </svg>
+        <span id="hintMsg">Only last digits will be used based on account type</span>
+      </div>
+
+      <!-- CONVERT -->
+      <button class="convert-btn" onclick="doConvert()">
+        Convert
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- OUTPUT -->
+      <div class="divider">Result</div>
+
+      <div class="output-section" id="outputSection">
+        <div class="output-label">Full Account Number (15 digits)</div>
+        <div class="output-box">
+          <div class="output-number" id="outputNumber">—</div>
+          <button class="copy-btn" id="copyBtn" onclick="copyNumber()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="5" y="1" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+              <rect x="1" y="3" width="8" height="10" rx="1.5" fill="white" stroke="currentColor" stroke-width="1.3"/>
+            </svg>
+            Copy
+          </button>
+        </div>
+
+        <div class="breakdown" id="breakdown">
+          <div class="bd-item">
+            <div class="bd-key">Prefix</div>
+            <div class="bd-val" id="bdPrefix">—</div>
+          </div>
+          <div class="bd-item">
+            <div class="bd-key">Padding</div>
+            <div class="bd-val" id="bdPadding">—</div>
+          </div>
+          <div class="bd-item accent-green">
+            <div class="bd-key">Digits Used</div>
+            <div class="bd-val" id="bdDigits">—</div>
+          </div>
+          <div class="bd-item accent-blue full">
+            <div class="bd-key">Account Type</div>
+            <div class="bd-val" id="bdType">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RULE CARD -->
+      <div class="rule-card" id="ruleCard">
+        <h3 id="ruleTitle">Saving / Current Rule</h3>
+        <div class="rule-item">→ Take only the <strong>last 3 digits</strong> of input</div>
+        <div class="rule-item">→ Formula: <code>02100310</code> + <code>00000</code> + <code>last 3 digits</code></div>
+        <div class="rule-item">→ e.g. <code>213172</code> → <code>02100310000072</code></div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>Bank Account Formatter · Internal Utility Tool</footer>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="toast-check">✓</span>
+    <span id="toastMsg">Copied to clipboard!</span>
+  </div>
+
+<script>
+  /* ───────────────────────────────────────────
+     STATE
+  ─────────────────────────────────────────── */
+  var currentType = 'saving';
+  var lastResult  = null;
+
+  /* ───────────────────────────────────────────
+     TYPE SWITCH
+  ─────────────────────────────────────────── */
+  function setType(type) {
+    currentType = type;
+    document.getElementById('btnSaving').classList.toggle('active', type === 'saving');
+    document.getElementById('btnLoan').classList.toggle('active',   type === 'loan');
+    updateRule();
+    // Re-run conversion if there's already a value
+    var val = document.getElementById('acInput').value.trim();
+    if (val) doConvert(); else clearOutput();
+  }
+
+  function updateRule() {
+    var title = document.getElementById('ruleTitle');
+    var card  = document.getElementById('ruleCard');
+    if (currentType === 'saving') {
+      title.textContent = 'Saving / Current Rule';
+      card.innerHTML = `
+        <h3>Saving / Current Rule</h3>
+        <div class="rule-item">→ Take only the <strong>last 3 digits</strong> of input</div>
+        <div class="rule-item">→ Formula: <code>02100310</code> + <code>00000</code> + <code>last 3 digits</code></div>
+        <div class="rule-item">→ e.g. <code>213172</code> → <code>02100310000072</code></div>
+        <div class="rule-item">→ e.g. <code>31455</code> &nbsp;→ <code>02100310000455</code></div>`;
+    } else {
+      title.textContent = 'Loan Account Rule';
+      card.innerHTML = `
+        <h3>Loan Account Rule</h3>
+        <div class="rule-item">→ If input &gt; 6 digits → take <strong>last 6</strong></div>
+        <div class="rule-item">→ If input ≤ 6 digits → take <strong>full input</strong></div>
+        <div class="rule-item">→ Formula: <code>02107170</code> + pad to 7 digits</div>
+        <div class="rule-item">→ e.g. <code>2171723455</code> → <code>021071702003455</code></div>
+        <div class="rule-item">→ e.g. <code>717455</code> &nbsp;&nbsp;&nbsp;→ <code>021071700000455</code></div>`;
+    }
+  }
+
+  /* ───────────────────────────────────────────
+     CORE CONVERSION LOGIC
+  ─────────────────────────────────────────── */
+
+  /*
+   * SAVING / CURRENT
+   * ─────────────────
+   * Format: 02100310 (8) + 000 (3 pad) + account_serial (3) = 14 digits
+   *
+   * Rule: locate the scheme code (31 = Savings, 38 = Current) inside the input.
+   *       Take everything AFTER the scheme code as the account serial.
+   *       Pad to 3 digits with leading zeros.
+   *
+   * e.g.  213172  → scheme 31 at pos 2 → after = "72"  → padStart(3)="072" → 02100310000072
+   *       31455   → scheme 31 at pos 0 → after = "455" → padStart(3)="455" → 02100310000455
+   */
+  function convertSaving(raw) {
+    var digits = raw.replace(/\D/g, '');
+    if (!digits) return { ok: false, msg: 'Enter at least 1 digit.' };
+
+    var PREFIX = '02100310';
+    var PAD    = '000';
+    var acno   = '';
+
+    // Locate scheme code 31 or 38, take everything after it
+    for (var i = 0; i < digits.length - 1; i++) {
+      var pair = digits.substr(i, 2);
+      if (pair === '31' || pair === '38') {
+        acno = digits.substring(i + 2);
+        break;
+      }
+    }
+    // Fallback: take last 3 digits
+    if (!acno) acno = digits.slice(-3);
+
+    var serial = acno.padStart(3, '0').slice(-3); // ensure max 3 digits
+
+    return {
+      ok:      true,
+      full:    PREFIX + PAD + serial,
+      prefix:  PREFIX,
+      padding: PAD,
+      digits:  serial,
+      type:    'Saving / Current Account'
+    };
+  }
+
+  /*
+   * LOAN ACCOUNT
+   * ─────────────
+   * Format: 02107170 (8) + account_serial (7) = 15 digits
+   *
+   * Rule: locate scheme code 71 (loan) inside the input.
+   *       Skip 1 digit after scheme code (sub-type digit).
+   *       Take all remaining digits as account serial.
+   *       Pad to 7 digits with leading zeros.
+   *
+   * e.g.  717455     → scheme 71 at pos 0 → skip sub(7) → "455" → padStart(7)=0000455 → 021071700000455
+   *       2171723455 → scheme 71 at pos 2 → skip sub(7) → "23455" → padStart(7)=0023455 → 021071700023455
+   *       (Note: if input > 6 digits and no scheme found, take last 6 and pad to 7)
+   */
+  function convertLoan(raw) {
+    var digits = raw.replace(/\D/g, '');
+    if (!digits) return { ok: false, msg: 'Enter at least 1 digit.' };
+
+    var PREFIX = '02107170';
+    var acno   = '';
+
+    // Locate scheme code 71 or 17, skip 1 sub digit, take rest as acno
+    for (var i = 0; i < digits.length - 1; i++) {
+      var pair = digits.substr(i, 2);
+      if (pair === '71' || pair === '17') {
+        var afterScheme = digits.substring(i + 2);  // skip the 2-char scheme
+        acno = afterScheme.length > 1
+          ? afterScheme.substring(1)   // skip 1 sub digit
+          : afterScheme;
+        break;
+      }
+    }
+    // Fallback: >6 → last 6, else full
+    if (!acno) {
+      acno = digits.length > 6 ? digits.slice(-6) : digits;
+    }
+
+    var serial = acno.padStart(7, '0').slice(-7);
+
+    return {
+      ok:      true,
+      full:    PREFIX + serial,
+      prefix:  PREFIX,
+      padding: serial.slice(0, serial.length - acno.length > 0 ? serial.length - acno.length : 0),
+      digits:  acno,
+      type:    'Loan Account'
+    };
+  }
+
+  /* ───────────────────────────────────────────
+     VALIDATION & HINTS
+  ─────────────────────────────────────────── */
+  function validateInput(raw) {
+    var digits = raw.replace(/\D/g, '');
+    if (!digits) return { valid: false, msg: 'Please enter a number.' };
+    if (currentType === 'saving' && digits.length < 1)
+      return { valid: false, msg: 'Enter at least 1 digit.' };
+    if (currentType === 'loan' && digits.length < 1)
+      return { valid: false, msg: 'Enter at least 1 digit.' };
+    return { valid: true };
+  }
+
+  /* ───────────────────────────────────────────
+     UI EVENTS
+  ─────────────────────────────────────────── */
+  function onInput(el) {
+    // Allow only digits and spaces (for readability)
+    el.value = el.value.replace(/[^\d]/g, '');
+
+    var clearBtn = document.getElementById('clearBtn');
+    clearBtn.classList.toggle('visible', el.value.length > 0);
+
+    // Reset error style
+    el.classList.remove('error');
+    setHint('Only last digits will be used based on account type', false);
+
+    // Live convert
+    if (el.value.length > 0) doConvert(true);
+    else clearOutput();
+  }
+
+  function clearInput() {
+    var el = document.getElementById('acInput');
+    el.value = '';
+    el.classList.remove('error');
+    document.getElementById('clearBtn').classList.remove('visible');
+    setHint('Only last digits will be used based on account type', false);
+    clearOutput();
+    el.focus();
+  }
+
+  function clearOutput() {
+    document.getElementById('outputSection').classList.remove('visible');
+    lastResult = null;
+  }
+
+  function setHint(msg, isErr) {
+    var hint = document.getElementById('hintText');
+    var span = document.getElementById('hintMsg');
+    span.textContent = msg;
+    hint.classList.toggle('err', isErr);
+  }
+
+  /* ───────────────────────────────────────────
+     CONVERT
+  ─────────────────────────────────────────── */
+  function doConvert(silent) {
+    var raw = document.getElementById('acInput').value.trim();
+    var v   = validateInput(raw);
+
+    if (!v.valid) {
+      if (!silent) {
+        document.getElementById('acInput').classList.add('error');
+        setHint(v.msg, true);
+      }
+      return;
+    }
+
+    var result = currentType === 'saving' ? convertSaving(raw) : convertLoan(raw);
+
+    if (!result.ok) {
+      if (!silent) {
+        document.getElementById('acInput').classList.add('error');
+        setHint(result.msg, true);
+      }
+      return;
+    }
+
+    lastResult = result;
+    renderOutput(result);
+  }
+
+  function renderOutput(r) {
+    document.getElementById('outputNumber').textContent = r.full;
+    document.getElementById('bdPrefix').textContent     = r.prefix;
+    document.getElementById('bdPadding').textContent    = r.padding || '(none)';
+    document.getElementById('bdDigits').textContent     = r.digits;
+    document.getElementById('bdType').textContent       = r.type;
+
+    // Reset copy button
+    var cb = document.getElementById('copyBtn');
+    cb.classList.remove('copied');
+    cb.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <rect x="5" y="1" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="1" y="3" width="8" height="10" rx="1.5" fill="white" stroke="currentColor" stroke-width="1.3"/>
+    </svg> Copy`;
+
+    document.getElementById('outputSection').classList.add('visible');
+
+    // Hint shows digits used
+    if (currentType === 'saving') {
+      setHint('Using last 3 digits: ' + r.digits, false);
+    } else {
+      var rawLen = document.getElementById('acInput').value.replace(/\D/g,'').length;
+      setHint(rawLen > 6 ? 'Using last 6 digits: ' + r.digits : 'Full input used: ' + r.digits, false);
+    }
+  }
+
+  /* ───────────────────────────────────────────
+     COPY
+  ─────────────────────────────────────────── */
+  function copyNumber() {
+    if (!lastResult) return;
+    var num = lastResult.full;
+    navigator.clipboard.writeText(num).then(function() {
+      var cb = document.getElementById('copyBtn');
+      cb.classList.add('copied');
+      cb.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2 7l3.5 3.5L12 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg> Copied!`;
+      showToast('Copied: ' + num);
+      setTimeout(function() {
+        cb.classList.remove('copied');
+        cb.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="5" y="1" width="8" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/>
+          <rect x="1" y="3" width="8" height="10" rx="1.5" fill="white" stroke="currentColor" stroke-width="1.3"/>
+        </svg> Copy`;
+      }, 2500);
+    }).catch(function() {
+      showToast(num);
+    });
+  }
+
+  /* ───────────────────────────────────────────
+     TOAST
+  ─────────────────────────────────────────── */
+  var toastTimer;
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2800);
+  }
+
+  /* ───────────────────────────────────────────
+     INIT
+  ─────────────────────────────────────────── */
+  updateRule();
+  document.getElementById('acInput').focus();
+</script>
+</body>
+</html>

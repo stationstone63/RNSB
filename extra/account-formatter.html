@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank Account Number Formatter</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 480px;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+      }
+
+      .header-icon svg {
+        width: 30px;
+        height: 30px;
+        fill: #ffffff;
+      }
+
+      h1 {
+        color: #1e3a5f;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        color: #6b7c8a;
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        color: #1e3a5f;
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 1.1rem;
+        font-family: "Courier New", monospace;
+        border: 2px solid #e1e8ed;
+        border-radius: 10px;
+        outline: none;
+        transition: all 0.3s ease;
+        background: #fafbfc;
+      }
+
+      input[type="text"]:focus {
+        border-color: #2d5a87;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(45, 90, 135, 0.1);
+      }
+
+      input[type="text"]::placeholder {
+        color: #a0aab3;
+      }
+
+      .hint {
+        margin-top: 10px;
+        padding: 12px 14px;
+        background: #f0f4f8;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: #5a6b7a;
+        line-height: 1.5;
+      }
+
+      .hint-title {
+        font-weight: 600;
+        color: #1e3a5f;
+        margin-bottom: 4px;
+      }
+
+      .formatted-preview {
+        margin-top: 15px;
+        padding: 14px;
+        background: linear-gradient(135deg, #e8f4fd 0%, #dbeef8 100%);
+        border-radius: 10px;
+        border-left: 4px solid #2d5a87;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .formatted-preview .label {
+        font-size: 0.8rem;
+        color: #5a6b7a;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .formatted-preview .value {
+        font-family: "Courier New", monospace;
+        font-size: 1.2rem;
+        color: #1e3a5f;
+        font-weight: 600;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 14px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+        color: #ffffff;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.3);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-secondary {
+        background: #f0f4f8;
+        color: #1e3a5f;
+      }
+
+      .btn-secondary:hover {
+        background: #e4eaf1;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary:active {
+        transform: translateY(0);
+      }
+
+      .output-section {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 2px dashed #e1e8ed;
+      }
+
+      .output-group {
+        position: relative;
+      }
+
+      .output-input {
+        background: #f8fafc !important;
+        color: #1e3a5f;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+
+      .copy-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .copy-btn:hover {
+        background: #e8f4fd;
+      }
+
+      .copy-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: #5a6b7a;
+        transition: fill 0.3s ease;
+      }
+
+      .copy-btn:hover svg {
+        fill: #2d5a87;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: #1e3a5f;
+        color: #ffffff;
+        padding: 14px 24px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      .toast svg {
+        width: 20px;
+        height: 20px;
+        fill: #4ade80;
+      }
+
+      .error {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: none;
+        animation: shake 0.4s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .error.show {
+        display: block;
+      }
+
+      .examples {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #e1e8ed;
+      }
+
+      .examples-title {
+        font-size: 0.85rem;
+        color: #6b7c8a;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .example-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        background: #f8fafc;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        transition: background 0.3s ease;
+      }
+
+      .example-item:hover {
+        background: #f0f4f8;
+      }
+
+      .example-input {
+        font-family: "Courier New", monospace;
+        color: #5a6b7a;
+      }
+
+      .example-arrow {
+        color: #a0aab3;
+        font-size: 0.8rem;
+      }
+
+      .example-output {
+        font-family: "Courier New", monospace;
+        color: #1e3a5f;
+        font-weight: 600;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 25px;
+        }
+
+        h1 {
+          font-size: 1.3rem;
+        }
+
+        .btn-group {
+          flex-direction: column;
+        }
+
+        .example-item {
+          flex-direction: column;
+          gap: 5px;
+          text-align: center;
+        }
+
+        .example-arrow {
+          transform: rotate(90deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm2 2h2v2H6V8zm0 4h2v2H6v-2zm0 4h2v2H6v-2zm4-8h8v8h-8V8zm2 2v4h4v-4h-4zm-2 2h2v2H8v-2zm0 4h2v2H8v-2z"
+            />
+          </svg>
+        </div>
+        <h1>Account Number Formatter</h1>
+        <p class="subtitle">Convert short numbers to full account format</p>
+      </div>
+
+      <div class="form-group">
+        <label for="accountInput">Enter Account Number</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="accountInput"
+            placeholder="e.g., 2114414567 or 21/144/1/4567"
+            autocomplete="off"
+          />
+        </div>
+        <div class="hint">
+          <div class="hint-title">Format: 21 / Scheme / Type / Account</div>
+          <div>
+            Enter 8-10 digits without slashes, or use 21/XXX/X/XXXX format
+          </div>
+        </div>
+        <div class="error" id="errorMessage"></div>
+      </div>
+
+      <div
+        class="formatted-preview"
+        id="formattedPreview"
+        style="display: none"
+      >
+        <div class="label">Formatted Preview</div>
+        <div class="value" id="formattedValue">21/XXX/X/XXXX</div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="convertBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"
+            />
+          </svg>
+          Convert
+        </button>
+        <button class="btn btn-secondary" id="clearBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+            />
+          </svg>
+          Clear
+        </button>
+      </div>
+
+      <div class="output-section">
+        <div class="output-group">
+          <label for="accountOutput">Final Account Number</label>
+          <input
+            type="text"
+            id="accountOutput"
+            class="output-input"
+            readonly
+            placeholder="Output will appear here"
+          />
+          <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="examples">
+        <div class="examples-title">Quick Examples</div>
+        <div class="example-item">
+          <span class="example-input">2114414567</span>
+          <span class="example-arrow">→</span>
+          <span class="example-output">021014401004567</span>
+        </div>
+        <div class="example-item">
+          <span class="example-input">218562999</span>
+          <span class="example-arrow">→</span>
+          <span class="example-output">021085601002999</span>
+        </div>
+        <div class="example-item">
+          <span class="example-input">211631818</span>
+          <span class="example-arrow">→</span>
+          <span class="example-output">021016301000818</span>
+        </div>
+        <div class="example-item">
+          <span class="example-input">21/141/3456</span>
+          <span class="example-arrow">→</span>
+          <span class="example-output">021014100003456</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+      </svg>
+      <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+
+    <script>
+      const accountInput = document.getElementById("accountInput");
+      const accountOutput = document.getElementById("accountOutput");
+      const convertBtn = document.getElementById("convertBtn");
+      const clearBtn = document.getElementById("clearBtn");
+      const copyBtn = document.getElementById("copyBtn");
+      const formattedPreview = document.getElementById("formattedPreview");
+      const formattedValue = document.getElementById("formattedValue");
+      const errorMessage = document.getElementById("errorMessage");
+      const toast = document.getElementById("toast");
+      const toastMessage = document.getElementById("toastMessage");
+
+      // Format account number with slashes for preview
+      function formatWithSlashes(scheme, type, account) {
+        return `21/${scheme}/${type}/${account}`;
+      }
+
+      // Pad account number with leading zeros to 6 digits
+      function padAccount(account) {
+        return account.padStart(6, "0");
+      }
+
+      // Parse input and return structured data
+      function parseInput(input) {
+        // Remove all spaces
+        let cleaned = input.replace(/\s/g, "");
+
+        // Check if has slashes
+        if (cleaned.includes("/")) {
+          // Input with slashes: 21/XXX/X/XXXX or 21/XXX/XXXX
+          const parts = cleaned.split("/");
+
+          if (parts.length < 3) {
+            return { error: "Invalid format. Use: 21/XXX/X/XXXX" };
+          }
+
+          const prefix = parts[0]; // Should be 21
+          const scheme = parts[1]; // Scheme code
+          let type, account;
+
+          if (parts.length === 4) {
+            // Format: 21/XXX/X/XXXX
+            type = parts[2];
+            account = parts[3];
+          } else if (parts.length === 3) {
+            // Format: 21/XXX/XXXX (type missing)
+            type = "0";
+            account = parts[2];
+          } else {
+            return { error: "Invalid format. Use: 21/XXX/X/XXXX" };
+          }
+
+          return {
+            prefix,
+            scheme,
+            type,
+            account,
+          };
+        } else {
+          // Input without slashes: 2114414567
+          // Format: 21 + XXX (scheme) + X (type) + XXXX (account)
+
+          if (cleaned.length < 7) {
+            return {
+              error: "Input too short. Need at least 7 digits after 21.",
+            };
+          }
+
+          // First 2 digits should be 21
+          if (!cleaned.startsWith("21")) {
+            return { error: "Input must start with 21" };
+          }
+
+          const afterPrefix = cleaned.substring(2);
+
+          // Next 3 digits = Scheme Code
+          const scheme = afterPrefix.substring(0, 3);
+
+          // Next 1 digit = Type
+          const type = afterPrefix.substring(3, 4);
+
+          // Remaining = Account
+          const account = afterPrefix.substring(4);
+
+          return {
+            prefix: "21",
+            scheme,
+            type,
+            account,
+          };
+        }
+      }
+
+      // Convert parsed input to final account number
+      function convertToAccountNumber(parsed) {
+        if (parsed.error) {
+          return null;
+        }
+
+        const paddedAccount = padAccount(parsed.account);
+
+        // Final format: 021 + Scheme + Type + Padded Account
+        const finalAccount =
+          "021" + parsed.scheme + parsed.type + paddedAccount;
+
+        return {
+          finalAccount,
+          formattedPreview: formatWithSlashes(
+            parsed.scheme,
+            parsed.type,
+            paddedAccount,
+          ),
+        };
+      }
+
+      // Show error message
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.add("show");
+        formattedPreview.style.display = "none";
+      }
+
+      // Hide error message
+      function hideError() {
+        errorMessage.classList.remove("show");
+      }
+
+      // Show toast notification
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
+
+      // Main conversion function
+      function convert() {
+        const input = accountInput.value.trim();
+
+        if (!input) {
+          showError("Please enter an account number");
+          accountOutput.value = "";
+          formattedPreview.style.display = "none";
+          return;
+        }
+
+        hideError();
+
+        const parsed = parseInput(input);
+
+        if (parsed.error) {
+          showError(parsed.error);
+          accountOutput.value = "";
+          formattedPreview.style.display = "none";
+          return;
+        }
+
+        const result = convertToAccountNumber(parsed);
+
+        if (result) {
+          accountOutput.value = result.finalAccount;
+          formattedValue.textContent = result.formattedPreview;
+          formattedPreview.style.display = "block";
+        }
+      }
+
+      // Clear all fields
+      function clearAll() {
+        accountInput.value = "";
+        accountOutput.value = "";
+        hideError();
+        formattedPreview.style.display = "none";
+        accountInput.focus();
+      }
+
+      // Copy to clipboard
+      async function copyToClipboard() {
+        const output = accountOutput.value;
+
+        if (!output) {
+          showToast("Nothing to copy!");
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(output);
+          showToast("Copied to clipboard!");
+        } catch (err) {
+          // Fallback for older browsers
+          accountOutput.select();
+          document.execCommand("copy");
+          showToast("Copied to clipboard!");
+        }
+      }
+
+      // Event listeners
+      convertBtn.addEventListener("click", convert);
+      clearBtn.addEventListener("click", clearAll);
+      copyBtn.addEventListener("click", copyToClipboard);
+
+      // Real-time conversion on typing
+      accountInput.addEventListener("input", () => {
+        if (accountInput.value.trim()) {
+          convert();
+        } else {
+          accountOutput.value = "";
+          hideError();
+          formattedPreview.style.display = "none";
+        }
+      });
+
+      // Enter key to convert
+      accountInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          convert();
+        }
+      });
+
+      // Auto-focus on load
+      window.addEventListener("load", () => {
+        accountInput.focus();
+      });
+    </script>
+  </body>
+</html>

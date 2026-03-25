@@ -805,6 +805,12 @@ const screenConfig = {
     back: false,
     nav: "accounts",
   },
+  "account-finder": {
+    title: "🔎 Account Finder",
+    sub: "Convert to 15-Digit Format",
+    back: false,
+    nav: "account-finder",
+  },
   chat: {
     title: "Step Guide",
     sub: "Senior Assistant",
@@ -1310,78 +1316,302 @@ function showToast(msg) {
 /* ============================================================
    LOAN SCHEMES DATA
 ============================================================ */
-const LOAN_SCHEMES = [
-  { gl: "66", code: "3001", desc: "LOAN AGAINST FIXED DEPOSITS66" },
-  { gl: "139", code: "3002", desc: "SURETY LOAN" },
-  { gl: "140", code: "3003", desc: "NOMINAL SURETY LOAN" },
-  { gl: "141", code: "3004", desc: "LAND AND BUILDING LOAN" },
-  { gl: "142", code: "3005", desc: "INDUSTRIAL LOAN (MACHINERY)" },
-  { gl: "143", code: "3006", desc: "SECURED LOAN" },
-  { gl: "144", code: "3007", desc: "GOLD LOAN - BULLET REPAYMENT" },
-  { gl: "147", code: "3008", desc: "LOAN AGAINST NSC/KVP/LIC" },
-  { gl: "152", code: "3009", desc: "UNSECURED LOAN" },
-  { gl: "155", code: "3010", desc: "BANKABLE LOAN (P.M. ROJGAR YOJNA)" },
-  { gl: "157", code: "3011", desc: "STAFF DOMESTIC LOAN" },
-  { gl: "159", code: "3012", desc: "STAFF HOUSING LOAN" },
-  { gl: "161", code: "3013", desc: "LOAN AGAINST SHARE/DEBENTURE" },
-  { gl: "162", code: "3014", desc: "STAFF CONCESSIONAL DOMESTIC LOAN" },
-  { gl: "163", code: "3015", desc: "INDUSTRIAL LOAN (LAND AND BUILDING)" },
-  { gl: "168", code: "3016", desc: "EDUCATION LOAN" },
-  { gl: "186", code: "3017", desc: "EARTH-QUAKE LOAN (GENERAL)" },
-  { gl: "187", code: "3018", desc: "EARTHQUAKE LOAN (INDUSTRIAL)" },
-  { gl: "239", code: "3019", desc: "SURETY LOAN (H.O.-DAVA)" },
-  { gl: "297", code: "3020", desc: "STAFF PERSONAL LOAN" },
-  { gl: "339", code: "3021", desc: "SURETY LOAN (OVERDUE)" },
-  { gl: "340", code: "3022", desc: "NOMINAL SURETY LOAN (OVERDUE)" },
-  { gl: "341", code: "3023", desc: "LAND AND BUILDING LOAN (OVERDUE)" },
-  { gl: "342", code: "3024", desc: "INDUSTRIAL LOAN (OVERDUE)" },
-  { gl: "343", code: "3025", desc: "SECURED LOAN (OVERDUE)" },
-  { gl: "355", code: "3026", desc: "BANKABLE LOAN OVERDUE" },
-  { gl: "439", code: "3027", desc: "SURETY LOAN (H.O.-OVERDUE)" },
-  { gl: "440", code: "3028", desc: "NOMINAL SURETY LOAN (H.O.-OVERDUE)" },
-  { gl: "441", code: "3029", desc: "LAND & BUILDING LOAN (H.O.-OVERDUE)" },
-  { gl: "442", code: "3030", desc: "INDUSTRIAL LOAN (H.O.-OVERDUE)" },
-  { gl: "443", code: "3031", desc: "SECURED LOAN (H.O.-OVERDUE)" },
-  { gl: "640", code: "3032", desc: "NOMINAL LOAN (H.O.-DAVA)" },
-  { gl: "643", code: "3033", desc: "SECURED LOAN (H.O.-DAVA)" },
-  { gl: "717", code: "3034", desc: "NAGARIK LAGHU UDYOG VEPAR LOAN" },
-  { gl: "719", code: "3035", desc: "SABHASAD SUVIDHA LOAN" },
-  { gl: "720", code: "3036", desc: "LAND & BUILDING LOAN-CM-AVAS YOJNA" },
-  { gl: "721", code: "3037", desc: "HOME APPLIANCES AND VEHICLE LOAN" },
-  { gl: "722", code: "3038", desc: "STAFF DOMESTIC/FURNITURE LOAN" },
-  { gl: "741", code: "3039", desc: "REVERSE MORTGAGE" },
-  { gl: "742", code: "3040", desc: "FURNITURE LOAN" },
-  { gl: "744", code: "3041", desc: "GOLD LOAN - SONA" },
-  { gl: "767", code: "3042", desc: "KALPATARU DHIRAN" },
-  { gl: "775", code: "3043", desc: "NAGARIK E-BIKE LOAN (GUCBF)" },
-  { gl: "792", code: "3044", desc: "VYAPAR VRUDDHI DHIRAN YOJNA LOAN" },
-  { gl: "793", code: "3045", desc: "PMEGP-TERM LOAN" },
-  { gl: "795", code: "3046", desc: "MISSION NEXT GENERATION LOAN A/C" },
-  { gl: "796", code: "3047", desc: "UNSECURED LOAN UPTO 1 LAC" },
-  { gl: "797", code: "3048", desc: "AATMANIRBHAR GUJ LOAN UPTO 1 LAC" },
-  { gl: "798", code: "3049", desc: "COVID-19 5 LAC" },
-  { gl: "799", code: "3050", desc: "COVID-19 25% ADDITIONAL TERM LOAN" },
-  { gl: "814", code: "3051", desc: "SECURED LOAN UPTO 1 LAC" },
-  { gl: "844", code: "3052", desc: "AATMANIRBHAR GUJARAT SAHAY YOJANA 2" },
-  { gl: "846", code: "3053", desc: "MUKHYAMANTRI MAHILA UTKARSH YOJANA" },
-  { gl: "849", code: "3054", desc: "BATTERY OPERATED TWO WHEELER LOANS" },
-  { gl: "850", code: "3055", desc: "SOLAR LOAN MSME" },
-  { gl: "854", code: "3056", desc: "MONTHLY INT BULLET GOLD LOAN(12MON)" },
-  { gl: "856", code: "3057", desc: "TATKAL LOAN" },
-  { gl: "857", code: "3058", desc: "LIFE POLICY PREMIUM LOAN" },
-  { gl: "866", code: "3059", desc: "LOAN AGAINST FIXED DEPOSITS" },
-  { gl: "862", code: "3060", desc: "CAR LOAN" },
-  { gl: "790", code: "3061", desc: "AGRICULTURE ALLIED ACTIVITY LOAN" },
-  { gl: "852", code: "3062", desc: "3 MONTHS BULLET GOLD LOAN" },
-  { gl: "853", code: "3063", desc: "6 MONTHS BULLET GOLD LOAN" },
-  { gl: "855", code: "3064", desc: "EMI BASED GOLD LOAN" },
-  { gl: "858", code: "3065", desc: "SOVEREIGN GOLD BOND(SGB-BULLET PMT)" },
-  { gl: "860", code: "3066", desc: "SOVEREIGN GOLD BOND(SGB-TERM LOAN)" },
+const loanSchemes = [
+  {
+    old_gl: "66",
+    schm_code: "3001",
+    schm_desc: "LOAN AGAINST FIXED DEPOSITS66",
+  },
+  { old_gl: "139", schm_code: "3002", schm_desc: "SURETY LOAN" },
+  { old_gl: "140", schm_code: "3003", schm_desc: "NOMINAL SURETY LOAN" },
+  { old_gl: "141", schm_code: "3004", schm_desc: "LAND AND BUILDING LOAN" },
+  {
+    old_gl: "142",
+    schm_code: "3005",
+    schm_desc: "INDUSTRIAL LOAN (MACHINERY)",
+  },
+  { old_gl: "143", schm_code: "3006", schm_desc: "SECURED LOAN" },
+  {
+    old_gl: "144",
+    schm_code: "3007",
+    schm_desc: "GOLD LOAN - BULLET REPAYMENT",
+  },
+  { old_gl: "147", schm_code: "3008", schm_desc: "LOAN AGAINST NSC/KVP/LIC" },
+  { old_gl: "152", schm_code: "3009", schm_desc: "UNSECURED LOAN" },
+  {
+    old_gl: "155",
+    schm_code: "3010",
+    schm_desc: "BANKABLE LOAN (P.M. ROJGAR YOJNA)",
+  },
+  { old_gl: "157", schm_code: "3011", schm_desc: "STAFF DOMESTIC LOAN" },
+  { old_gl: "159", schm_code: "3012", schm_desc: "STAFF HOUSING LOAN" },
+  {
+    old_gl: "161",
+    schm_code: "3013",
+    schm_desc: "LOAN AGAINST SHARE/DEBENTURE",
+  },
+  {
+    old_gl: "162",
+    schm_code: "3014",
+    schm_desc: "STAFF CONCESSIONAL DOMESTIC LOAN",
+  },
+  {
+    old_gl: "163",
+    schm_code: "3015",
+    schm_desc: "INDUSTRIAL LOAN (LAND AND BUILDING)",
+  },
+  { old_gl: "168", schm_code: "3016", schm_desc: "EDUCATION LOAN" },
+  { old_gl: "186", schm_code: "3017", schm_desc: "EARTH-QUAKE LOAN (GENERAL)" },
+  {
+    old_gl: "187",
+    schm_code: "3018",
+    schm_desc: "EARTHQUAKE LOAN (INDUSTRIAL)",
+  },
+  { old_gl: "239", schm_code: "3019", schm_desc: "SURETY LOAN (H.O.-DAVA)" },
+  { old_gl: "297", schm_code: "3020", schm_desc: "STAFF PERSONAL LOAN" },
+  { old_gl: "339", schm_code: "3021", schm_desc: "SURETY LOAN (OVERDUE)" },
+  {
+    old_gl: "340",
+    schm_code: "3022",
+    schm_desc: "NOMINAL SURETY LOAN (OVERDUE)",
+  },
+  {
+    old_gl: "341",
+    schm_code: "3023",
+    schm_desc: "LAND AND BUILDING LOAN (OVERDUE)",
+  },
+  { old_gl: "342", schm_code: "3024", schm_desc: "INDUSTRIAL LOAN (OVERDUE)" },
+  { old_gl: "343", schm_code: "3025", schm_desc: "SECURED LOAN (OVERDUE)" },
+  { old_gl: "355", schm_code: "3026", schm_desc: "BANKABLE LOAN OVERDUE" },
+  { old_gl: "439", schm_code: "3027", schm_desc: "SURETY LOAN (H.O.-OVERDUE)" },
+  {
+    old_gl: "440",
+    schm_code: "3028",
+    schm_desc: "NOMINAL SURETY LOAN (H.O.-OVERDUE)",
+  },
+  {
+    old_gl: "441",
+    schm_code: "3029",
+    schm_desc: "LAND & BUILDING LOAN (H.O.-OVERDUE)",
+  },
+  {
+    old_gl: "442",
+    schm_code: "3030",
+    schm_desc: "INDUSTRIAL LOAN (H.O.-OVERDUE)",
+  },
+  {
+    old_gl: "443",
+    schm_code: "3031",
+    schm_desc: "SECURED LOAN (H.O.-OVERDUE)",
+  },
+  { old_gl: "640", schm_code: "3032", schm_desc: "NOMINAL LOAN (H.O.-DAVA)" },
+  { old_gl: "643", schm_code: "3033", schm_desc: "SECURED LOAN (H.O.-DAVA)" },
+  {
+    old_gl: "717",
+    schm_code: "3034",
+    schm_desc: "NAGARIK LAGHU UDYOG VEPAR LOAN",
+  },
+  { old_gl: "719", schm_code: "3035", schm_desc: "SABHASAD SUVIDHA LOAN" },
+  {
+    old_gl: "720",
+    schm_code: "3036",
+    schm_desc: "LAND & BUILDING LOAN-CM-AVAS YOJNA",
+  },
+  {
+    old_gl: "721",
+    schm_code: "3037",
+    schm_desc: "HOME APPLIANCES AND VEHICLE LOAN",
+  },
+  {
+    old_gl: "722",
+    schm_code: "3038",
+    schm_desc: "STAFF DOMESTIC/FURNITURE LOAN",
+  },
+  { old_gl: "741", schm_code: "3039", schm_desc: "REVERSE MORTGAGE" },
+  { old_gl: "742", schm_code: "3040", schm_desc: "FURNITURE LOAN" },
+  { old_gl: "744", schm_code: "3041", schm_desc: "GOLD LOAN - SONA" },
+  { old_gl: "767", schm_code: "3042", schm_desc: "KALPATARU DHIRAN" },
+  {
+    old_gl: "775",
+    schm_code: "3043",
+    schm_desc: "NAGARIK E-BIKE LOAN (GUCBF)",
+  },
+  {
+    old_gl: "792",
+    schm_code: "3044",
+    schm_desc: "VYAPAR VRUDDHI DHIRAN YOJNA LOAN",
+  },
+  { old_gl: "793", schm_code: "3045", schm_desc: "PMEGP-TERM LOAN" },
+  {
+    old_gl: "795",
+    schm_code: "3046",
+    schm_desc: "MISSION NEXT GENERATION LOAN A/C",
+  },
+  { old_gl: "796", schm_code: "3047", schm_desc: "UNSECURED LOAN UPTO 1 LAC" },
+  {
+    old_gl: "797",
+    schm_code: "3048",
+    schm_desc: "AATMANIRBHAR GUJ LOAN UPTO 1 LAC",
+  },
+  { old_gl: "798", schm_code: "3049", schm_desc: "COVID-19 5 LAC" },
+  {
+    old_gl: "799",
+    schm_code: "3050",
+    schm_desc: "COVID-19 25% ADDITIONAL TERM LOAN",
+  },
+  { old_gl: "814", schm_code: "3051", schm_desc: "SECURED LOAN UPTO 1 LAC" },
+  {
+    old_gl: "844",
+    schm_code: "3052",
+    schm_desc: "AATMANIRBHAR GUJARAT SAHAY YOJANA 2",
+  },
+  {
+    old_gl: "846",
+    schm_code: "3053",
+    schm_desc: "MUKHYAMANTRI MAHILA UTKARSH YOJANA",
+  },
+  {
+    old_gl: "849",
+    schm_code: "3054",
+    schm_desc: "BATTERY OPERATED TWO WHEELER LOANS",
+  },
+  { old_gl: "850", schm_code: "3055", schm_desc: "SOLAR LOAN MSME" },
+  {
+    old_gl: "854",
+    schm_code: "3056",
+    schm_desc: "MONTHLY INT BULLET GOLD LOAN(12MON)",
+  },
+  { old_gl: "856", schm_code: "3057", schm_desc: "TATKAL LOAN" },
+  { old_gl: "857", schm_code: "3058", schm_desc: "LIFE POLICY PREMIUM LOAN" },
+  {
+    old_gl: "866",
+    schm_code: "3059",
+    schm_desc: "LOAN AGAINST FIXED DEPOSITS",
+  },
+  { old_gl: "862", schm_code: "3060", schm_desc: "CAR LOAN" },
+  {
+    old_gl: "790",
+    schm_code: "3061",
+    schm_desc: "AGRICULTURE ALLIED ACTIVITY LOAN",
+  },
+  { old_gl: "852", schm_code: "3062", schm_desc: "3 MONTHS BULLET GOLD LOAN" },
+  { old_gl: "853", schm_code: "3063", schm_desc: "6 MONTHS BULLET GOLD LOAN" },
+  { old_gl: "855", schm_code: "3064", schm_desc: "EMI BASED GOLD LOAN" },
+  {
+    old_gl: "858",
+    schm_code: "3065",
+    schm_desc: "SOVEREIGN GOLD BOND(SGB-BULLET PMT)",
+  },
+  {
+    old_gl: "860",
+    schm_code: "3066",
+    schm_desc: "SOVEREIGN GOLD BOND(SGB-TERM LOAN)",
+  },
+  {
+    old_gl: "863",
+    schm_code: "3067",
+    schm_desc: "NAGARIK SAHAKAR DHIRAN YOJNA",
+  },
+];
+
+/* Cash not allowed (overdue/demand) */
+const cashNotAllowed = [
+  "3019",
+  "3021",
+  "3022",
+  "3023",
+  "3024",
+  "3025",
+  "3026",
+  "3027",
+  "3028",
+  "3029",
+  "3030",
+  "3031",
+  "3032",
+  "3033",
+];
+
+/* Cash allowed accounts */
+const cashAllowed = [
+  "3001",
+  "3002",
+  "3003",
+  "3004",
+  "3005",
+  "3006",
+  "3007",
+  "3008",
+  "3009",
+  "3010",
+  "3011",
+  "3012",
+  "3013",
+  "3014",
+  "3015",
+  "3016",
+  "3017",
+  "3018",
+  "3020",
+  "3034",
+  "3035",
+  "3036",
+  "3037",
+  "3038",
+  "3039",
+  "3040",
+  "3041",
+  "3042",
+  "3043",
+  "3044",
+  "3045",
+  "3046",
+  "3047",
+  "3048",
+  "3049",
+  "3050",
+  "3051",
+  "3052",
+  "3053",
+  "3054",
+  "3055",
+  "3056",
+  "3057",
+  "3058",
+  "3059",
+  "3060",
+  "3061",
+  "3062",
+  "3063",
+  "3064",
+  "3065",
+  "3066",
+  "3067",
 ];
 
 /* ============================================================
    ACCOUNTS - LOAN SCHEMES
 ============================================================ */
+function getCashStatus(oldGl) {
+  if (cashNotAllowed.includes(oldGl)) {
+    return {
+      allowed: false,
+      icon: "❌",
+      label: "Cash Not Allowed",
+      color: "#c0392b",
+    };
+  }
+  if (cashAllowed.includes(oldGl)) {
+    return {
+      allowed: true,
+      icon: "✅",
+      label: "Cash Allowed",
+      color: "#0f7c4a",
+    };
+  }
+  return { allowed: null, icon: "⚠️", label: "Check Rules", color: "#d68910" };
+}
+
 let loanSearchQuery = "";
 
 /* ============================================================
@@ -1402,13 +1632,13 @@ function renderLoanAccounts() {
   const grid = document.getElementById("loanAccountsGrid");
   if (!grid) return;
 
-  let filtered = [...LOAN_SCHEMES];
+  let filtered = [...loanSchemes];
   if (loanSearchQuery) {
     filtered = filtered.filter(
       (s) =>
-        s.desc.toLowerCase().includes(loanSearchQuery) ||
-        s.code.includes(loanSearchQuery) ||
-        s.gl.includes(loanSearchQuery),
+        s.schm_desc.toLowerCase().includes(loanSearchQuery) ||
+        s.schm_code.includes(loanSearchQuery) ||
+        s.old_gl.includes(loanSearchQuery),
     );
   }
 
@@ -1418,33 +1648,390 @@ function renderLoanAccounts() {
   }
 
   grid.innerHTML = filtered
-    .map(
-      (s) => `
+    .map((s) => {
+      const cash = getCashStatus(s.schm_code);
+      return `
       <div class="loan-account-card">
         <div class="loan-account-header">
-          <span class="loan-badge">🧾 ${s.desc}</span>
+          <span class="loan-badge">🧾 ${s.schm_desc}</span>
+          <span class="cash-indicator" style="color:${cash.color}">${cash.icon}</span>
         </div>
         <div class="loan-account-body">
           <div class="loan-detail">
             <span class="loan-detail-label">🔢 Scheme Code</span>
-            <span class="loan-detail-value scheme-code">${s.code}</span>
+            <span class="loan-detail-value scheme-code">${s.schm_code}</span>
           </div>
           <div class="loan-detail">
-            <span class="loan-detail-label">🏷️ GL Code</span>
-            <span class="loan-detail-value old-gl">${s.gl}</span>
+            <span class="loan-detail-label">🏷️ Old GL</span>
+            <span class="loan-detail-value old-gl">${s.old_gl}</span>
+          </div>
+          <div class="loan-detail cash-status-row">
+            <span class="loan-detail-label">💵 Cash</span>
+            <span class="loan-detail-value cash-rule" style="color:${cash.color}">${cash.label}</span>
           </div>
         </div>
-      </div>`,
-    )
+      </div>`;
+    })
     .join("");
 }
 
-// Initialize Accounts screen on show
-var originalSetScreenAccounts = setScreen;
+/* Cash Rules Summary */
+function updateCashRulesSummary() {
+  const summary = document.getElementById("cashRulesSummary");
+  if (!summary) return;
+
+  const notAllowed = cashNotAllowed.length;
+  const allowed = cashAllowed.length;
+
+  summary.innerHTML = `
+    <div class="summary-stat allowed">
+      <span class="stat-icon">✅</span>
+      <span class="stat-count">${allowed}</span>
+      <span class="stat-label">Cash Allowed</span>
+    </div>
+    <div class="summary-stat not-allowed">
+      <span class="stat-icon">❌</span>
+      <span class="stat-count">${notAllowed}</span>
+      <span class="stat-label">Cash Not Allowed</span>
+    </div>`;
+}
+
+/* ============================================================
+   ACCOUNT FINDER - NEW STRICT 15-DIGIT CONVERSION
+   ============================================================ */
+
+// Main function called from HTML oninput
+function processAFInput() {
+  var input = document.getElementById("afInput");
+  var clearBtn = document.getElementById("afClearBtn");
+  var resultCard = document.getElementById("afResultCard");
+  var errorCard = document.getElementById("afErrorCard");
+  var emptyState = document.getElementById("afEmptyState");
+
+  if (!input) return;
+
+  var value = input.value.trim();
+
+  // Toggle clear button
+  if (clearBtn) {
+    clearBtn.style.display = value ? "flex" : "none";
+  }
+
+  if (!value) {
+    resultCard.style.display = "none";
+    errorCard.style.display = "none";
+    emptyState.style.display = "block";
+    return;
+  }
+
+  var result = convertToFullAccount(value);
+
+  if (!result.success) {
+    resultCard.style.display = "none";
+    errorCard.style.display = "block";
+    emptyState.style.display = "none";
+    return;
+  }
+
+  displayAFResult(result);
+  resultCard.style.display = "block";
+  errorCard.style.display = "none";
+  emptyState.style.display = "none";
+}
+
+// Core conversion logic - NEW STRICT IMPLEMENTATION
+function convertToFullAccount(input) {
+  try {
+    // STEP 1: CLEAN INPUT - Remove "/" and spaces, keep only numbers
+    var cleaned = input.replace(/[\/\s]/g, "");
+
+    if (cleaned.length < 2 || !/^\d+$/.test(cleaned)) {
+      return { success: false, error: "Invalid input" };
+    }
+
+    var scheme, sub, last;
+
+    // STEP 2: Check if input has "/" separator
+    if (input.includes("/")) {
+      // Format: branch/scheme/sub/last or scheme/sub/last
+      var parts = input.split("/").filter(function (p) {
+        return p.trim().length > 0;
+      });
+
+      if (parts.length === 4) {
+        // Format: branch/scheme/sub/last (e.g., 21/717/2/810)
+        scheme = parts[1];
+        sub = parts[2];
+        last = parts[3];
+      } else if (parts.length === 3) {
+        // Format: scheme/sub/last (e.g., 717/2/810) or branch/scheme/last (e.g., 21/31/4455)
+        if (parts[0].startsWith("21") || parts[0].length <= 2) {
+          // branch/scheme/last format
+          scheme = parts[1];
+          sub = "0";
+          last = parts[2];
+        } else {
+          // scheme/sub/last format
+          scheme = parts[0];
+          sub = parts[1];
+          last = parts[2];
+        }
+      } else if (parts.length === 2) {
+        // Format: branch/scheme (e.g., 21/31) - incomplete
+        scheme = parts[1];
+        sub = "0";
+        last = "";
+      } else {
+        scheme = "31";
+        sub = "0";
+        last = "";
+      }
+    } else {
+      // No "/" - auto detect structure
+      var digits = cleaned;
+
+      // Check for branch prefix
+      if (digits.startsWith("021") || digits.startsWith("21")) {
+        // Remove branch prefix
+        var remaining = digits.startsWith("021")
+          ? digits.substring(3)
+          : digits.substring(2);
+
+        // Auto detect: if starts with 31 or 38 -> it's the scheme
+        if (remaining.startsWith("31")) {
+          scheme = "31";
+          var rest = remaining.substring(2);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        } else if (remaining.startsWith("38")) {
+          scheme = "38";
+          rest = remaining.substring(2);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        } else {
+          // First 3 digits as scheme
+          scheme = remaining.substring(0, 3);
+          rest = remaining.substring(3);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        }
+      } else {
+        // No branch prefix - assume starts with scheme
+        if (digits.startsWith("31")) {
+          scheme = "31";
+          rest = digits.substring(2);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        } else if (digits.startsWith("38")) {
+          scheme = "38";
+          rest = digits.substring(2);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        } else {
+          // Take first 3 digits as scheme
+          scheme = digits.substring(0, 3);
+          rest = digits.substring(3);
+          if (rest.length >= 1) {
+            sub = rest.charAt(0);
+            last = rest.substring(1);
+          } else {
+            sub = "0";
+            last = "";
+          }
+        }
+      }
+    }
+
+    // STEP 3: BUILD ACCOUNT NUMBER
+    // Structure: 021 + 0 + SCHEME + 0 + SUB + ZERO_PADDING + LAST
+    // Total = 15 digits
+
+    // STEP 4: FORCE BRANCH - Always start with 021
+    var normalizedBranch = "021";
+
+    // STEP 5: SCHEME RULE
+    // If scheme is 2 digits (31 or 38), prepend 0
+    var normalizedScheme;
+    if (scheme.length === 2) {
+      normalizedScheme = "0" + scheme;
+    } else if (scheme.length === 1) {
+      normalizedScheme = "00" + scheme;
+    } else {
+      normalizedScheme = scheme.substring(0, 3);
+    }
+
+    // STEP 6: ADD ZERO AFTER SCHEME
+    var afterScheme = "0";
+
+    // STEP 7: ADD SUB PART
+    var normalizedSub = sub || "0";
+    if (normalizedSub.length > 1) {
+      normalizedSub = normalizedSub.charAt(0);
+    }
+
+    // STEP 8: ADD LAST NUMBER
+    var normalizedLast = last || "";
+
+    // STEP 9: ZERO PADDING
+    var prefixZeros = 7 - normalizedLast.length;
+    var paddedLast = normalizedLast.padStart(7, "0");
+
+    // Build final 15-digit account
+    var fullAccount =
+      normalizedBranch +
+      afterScheme +
+      normalizedScheme +
+      normalizedSub +
+      paddedLast;
+
+    // Ensure exactly 15 digits
+    var finalAccount = fullAccount.substring(0, 15);
+
+    // STEP 10: Extract components for display
+    var branchCode = finalAccount.substring(0, 3);
+    var schemeCode = finalAccount.substring(4, 7);
+    var subCode = finalAccount.substring(8, 9);
+    var accountNumber = finalAccount.substring(9);
+
+    // Detect account type
+    var accountType = "Loan Account";
+    if (schemeCode === "031") {
+      accountType = "Saving Account";
+    } else if (schemeCode === "038") {
+      accountType = "Current Account";
+    }
+
+    // Find matching loan scheme
+    var oldGl = schemeCode.substring(1);
+    var matchingScheme = loanSchemes.find(function (s) {
+      return s.old_gl === oldGl || s.schm_code === schemeCode;
+    });
+
+    // Get cash status
+    var cashStatus = getCashStatus(schemeCode);
+
+    // Format for display
+    var formatted =
+      branchCode + "/" + schemeCode + "/" + subCode + "/" + accountNumber;
+
+    return {
+      success: true,
+      fullAccount: finalAccount,
+      formatted: formatted,
+      accountType: accountType,
+      schemeCode: schemeCode,
+      schemeName: matchingScheme
+        ? matchingScheme.schm_desc
+        : schemeCode === "031"
+          ? "Savings"
+          : schemeCode === "038"
+            ? "Current"
+            : "Loan Scheme " + schemeCode,
+      oldGl: matchingScheme ? matchingScheme.old_gl : oldGl,
+      cashStatus: cashStatus,
+      branchCode: branchCode,
+      branchName: "Main Branch",
+    };
+  } catch (e) {
+    return { success: false, error: "Conversion error" };
+  }
+}
+
+// Display the result
+function displayAFResult(result) {
+  document.getElementById("afFullAcc").textContent = result.fullAccount;
+  document.getElementById("afFormatted").textContent = result.formatted;
+  document.getElementById("afAccType").textContent = result.accountType;
+  document.getElementById("afSchemeName").textContent = result.schemeName;
+  document.getElementById("afSchemeCode").textContent = result.schemeCode;
+  document.getElementById("afOldGL").textContent = result.oldGl;
+
+  var cashBadge = document.getElementById("afCashBadge");
+  var cashIcon = document.getElementById("afCashIcon");
+  var cashText = document.getElementById("afCashText");
+
+  cashBadge.className =
+    "af-cash-badge " +
+    (result.cashStatus.allowed === true
+      ? "allowed"
+      : result.cashStatus.allowed === false
+        ? "not-allowed"
+        : "unknown");
+  cashIcon.textContent = result.cashStatus.icon;
+  cashText.textContent = result.cashStatus.label;
+
+  document.getElementById("afBranch").textContent =
+    result.branchCode + " - " + result.branchName;
+}
+
+// Clear input
+function clearAFInput() {
+  var input = document.getElementById("afInput");
+  var clearBtn = document.getElementById("afClearBtn");
+  var resultCard = document.getElementById("afResultCard");
+  var errorCard = document.getElementById("afErrorCard");
+  var emptyState = document.getElementById("afEmptyState");
+
+  if (input) input.value = "";
+  if (clearBtn) clearBtn.style.display = "none";
+  if (resultCard) resultCard.style.display = "none";
+  if (errorCard) errorCard.style.display = "none";
+  if (emptyState) emptyState.style.display = "block";
+
+  if (input) input.focus();
+}
+
+// Copy account number
+function copyAFNumber() {
+  var fullAcc = document.getElementById("afFullAcc").textContent;
+  if (fullAcc && fullAcc !== "-") {
+    navigator.clipboard
+      .writeText(fullAcc)
+      .then(function () {
+        showToast("Account number copied!");
+      })
+      .catch(function () {
+        showToast("Copy: " + fullAcc);
+      });
+  }
+}
+
+// Initialize Account Finder screen on show
+var originalSetScreenAF = setScreen;
 setScreen = function (name) {
-  originalSetScreenAccounts(name);
+  originalSetScreenAF(name);
 
   if (name === "accounts") {
     renderLoanAccounts();
+    updateCashRulesSummary();
+  }
+
+  if (name === "account-finder") {
+    clearAFInput();
   }
 };

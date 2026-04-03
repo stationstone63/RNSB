@@ -13,6 +13,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=IBM+Plex+Mono:wght@500;600&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
     <style>
       * {
         margin: 0;
@@ -21,124 +25,166 @@
       }
 
       body {
-        background: #ffffff;
+        background: #f0f2f8;
         font-family: "Inter", sans-serif;
         color: #1a1f2c;
         line-height: 1.4;
         -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
       }
 
-      /* main container – clean, max width centered */
+      /* ========== MAIN CONTAINER ========== */
       .app-container {
-        max-width: 720px;
+        max-width: 680px;
         margin: 0 auto;
-        padding: 0 20px 48px 20px;
+        padding: 0 16px 40px 16px;
       }
 
       /* ========== HEADER ========== */
       .bank-header {
         position: sticky;
         top: 0;
-        background: #ffffff;
-        z-index: 10;
+        background: linear-gradient(135deg, #0f9d58 0%, #0a7c42 100%);
+        z-index: 100;
+        padding: 16px 0;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(15, 157, 88, 0.25);
+      }
+
+      .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 18px 0 14px 0;
-        border-bottom: 1px solid #eff1f4;
-        margin-bottom: 28px;
+        padding: 0 4px;
       }
 
       .logo-area {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
       }
 
       .bank-icon {
-        width: 34px;
-        height: 34px;
-        background: #0f9d58;
-        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        backdrop-filter: blur(10px);
       }
 
-      .bank-icon svg {
-        width: 20px;
-        height: 20px;
-        fill: white;
+      .bank-icon i {
+        font-size: 20px;
+        color: white;
       }
 
       .bank-title {
-        font-size: 1.35rem;
-        font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 700;
         letter-spacing: -0.3px;
-        color: #0a1c2f;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .bank-subtitle {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
       }
 
       .back-button {
-        background: #f5f7fa;
-        border: none;
-        border-radius: 40px;
-        padding: 8px 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 50px;
+        padding: 8px 18px;
+        font-size: 0.85rem;
+        font-weight: 600;
         font-family: "Inter", sans-serif;
-        color: #1a2c3e;
+        color: white;
         display: flex;
         align-items: center;
         gap: 6px;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(10px);
       }
 
       .back-button:hover {
-        background: #e9edf2;
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateX(-2px);
       }
 
-      /* ========== SEARCH CARD ========== */
+      /* ========== SEARCH SECTION ========== */
       .search-section {
-        margin-bottom: 32px;
+        margin-bottom: 24px;
+      }
+
+      .input-card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      }
+
+      .search-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7c93;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .search-label i {
+        color: #0f9d58;
       }
 
       .input-wrapper {
-        background: #ffffff;
-        border: 1.5px solid #e2e6ea;
-        border-radius: 60px;
-        transition: all 0.2s ease;
-        box-shadow:
-          0 2px 6px rgba(0, 0, 0, 0.02),
-          0 1px 2px rgba(0, 0, 0, 0.03);
+        background: #f8f9fc;
+        border: 2px solid #e8ecf4;
+        border-radius: 16px;
+        transition: all 0.25s ease;
       }
 
       .input-wrapper:focus-within {
         border-color: #0f9d58;
+        background: white;
         box-shadow: 0 0 0 4px rgba(15, 157, 88, 0.12);
       }
 
       .input-with-icon {
         display: flex;
         align-items: center;
-        padding: 4px 20px 4px 24px;
+        padding: 4px 8px 4px 16px;
       }
 
-      .search-icon-svg {
-        width: 20px;
-        height: 20px;
-        color: #8e9aab;
-        margin-right: 12px;
+      .search-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #0f9d58 0%, #0a7c42 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
+      }
+
+      .search-icon i {
+        color: white;
+        font-size: 14px;
       }
 
       #acctInput {
         flex: 1;
-        padding: 16px 0;
+        padding: 14px 12px;
         font-family: "IBM Plex Mono", monospace;
-        font-size: 1.05rem;
-        font-weight: 500;
+        font-size: 1.1rem;
+        font-weight: 600;
         background: transparent;
         border: none;
         outline: none;
@@ -148,24 +194,25 @@
 
       #acctInput::placeholder {
         font-family: "Inter", sans-serif;
-        font-weight: 400;
+        font-weight: 500;
         font-size: 0.95rem;
-        color: #a8b2c2;
+        color: #a0aab8;
         letter-spacing: normal;
       }
 
       .input-clear {
-        background: none;
+        background: #f0f2f6;
         border: none;
-        font-size: 1.2rem;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 1rem;
         cursor: pointer;
-        color: #9aa6b5;
-        padding: 8px;
-        border-radius: 40px;
+        color: #6b7c93;
         display: none;
         align-items: center;
         justify-content: center;
-        transition: color 0.2s;
+        transition: all 0.2s;
       }
 
       .input-clear.show {
@@ -173,182 +220,262 @@
       }
 
       .input-clear:hover {
-        color: #e53e3e;
+        background: #fee2e2;
+        color: #d1453b;
       }
 
-      /* error / info line */
+      /* ========== INPUT INFO ========== */
       .input-info {
-        margin-top: 12px;
-        font-size: 0.75rem;
-        padding: 0 12px;
-        min-height: 36px;
+        margin-top: 14px;
+        min-height: 32px;
         display: flex;
         align-items: center;
         gap: 8px;
-        color: #687385;
+        flex-wrap: wrap;
       }
 
       .error-message {
-        color: #d1453b;
-        background: #fef5f4;
+        color: #dc2626;
+        background: #fef2f2;
         padding: 8px 14px;
-        border-radius: 40px;
+        border-radius: 10px;
         font-size: 0.75rem;
-        font-weight: 500;
-        width: fit-content;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 6px;
       }
 
       .detect-chip {
-        background: #f0f2f5;
-        border-radius: 40px;
-        padding: 5px 12px;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 50px;
+        padding: 6px 12px;
         font-size: 0.7rem;
-        font-weight: 500;
-        font-family: monospace;
-        color: #2c3e50;
+        font-weight: 600;
+        font-family: "IBM Plex Mono", monospace;
+        color: #1b5e20;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .format-hint {
+        background: #fff3e0;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-size: 0.7rem;
+        color: #e65100;
+        width: 100%;
       }
 
       /* ========== RESULT CARD ========== */
       .result-card {
-        background: #ffffff;
-        border: 1px solid #edf0f4;
-        border-radius: 28px;
-        padding: 24px 24px 20px;
-        margin-bottom: 28px;
-        box-shadow:
-          0 6px 14px rgba(0, 0, 0, 0.02),
-          0 2px 4px rgba(0, 0, 0, 0.02);
-        transition: all 0.2s;
+        background: white;
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        animation: slideUp 0.3s ease;
       }
 
-      .result-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .result-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.05em;
         color: #0f9d58;
-        background: #e9f7ef;
-        padding: 4px 12px;
-        border-radius: 40px;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        padding: 6px 14px;
+        border-radius: 50px;
+        margin-bottom: 16px;
       }
 
       .full-number-block {
-        background: #fafbfd;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         border-radius: 20px;
-        padding: 20px 16px;
+        padding: 24px 16px;
         text-align: center;
-        margin-bottom: 24px;
-        border: 1px solid #eef2f6;
+        margin-bottom: 20px;
+        border: 1px solid #e2e8f0;
       }
 
       .full-number-label {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 600;
-        color: #7d8b9f;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        color: #94a3b8;
         margin-bottom: 12px;
       }
 
       .full-number {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 1.55rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        color: #0b2b26;
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #0f172a;
         word-break: break-all;
+        line-height: 1.4;
       }
 
-      .digits-breakdown {
-        display: flex;
-        justify-content: space-between;
+      /* ========== DETAILS GRID ========== */
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
-        flex-wrap: wrap;
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 8px 0;
         margin-bottom: 20px;
       }
 
-      .digit-item {
-        flex: 1;
+      .detail-card {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 16px 12px;
         text-align: center;
-        background: #f8fafe;
-        border-radius: 18px;
-        padding: 12px 6px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s;
       }
 
-      .digit-label {
-        font-size: 0.7rem;
-        font-weight: 500;
-        color: #6f7c91;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 6px;
+      .detail-card:hover {
+        border-color: #0f9d58;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 157, 88, 0.1);
       }
 
-      .digit-value {
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #1a2c3e;
-      }
-
-      .copy-button {
-        width: 100%;
-        background: #f0f4f9;
-        border: none;
-        border-radius: 60px;
-        padding: 14px;
-        font-family: "Inter", sans-serif;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: #1e2f3e;
+      .detail-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        margin: 0 auto 10px;
       }
 
-      .copy-button:hover {
-        background: #e6ecf3;
-      }
-
-      .copy-button.copied {
-        background: #e9f7ef;
+      .detail-icon i {
+        font-size: 14px;
         color: #0f9d58;
       }
 
-      .divided-note {
-        background: #fef8e7;
+      .detail-card:nth-child(2) .detail-icon {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      }
+
+      .detail-card:nth-child(2) .detail-icon i {
+        color: #1565c0;
+      }
+
+      .detail-card:nth-child(3) .detail-icon {
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      }
+
+      .detail-card:nth-child(3) .detail-icon i {
+        color: #ef6c00;
+      }
+
+      .detail-label {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+      }
+
+      .detail-code {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+      }
+
+      .detail-name {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #0f9d58;
+        line-height: 1.3;
+        min-height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .detail-name.scheme-name {
+        color: #1565c0;
+        font-size: 0.6rem;
+      }
+
+      .detail-name.account-type {
+        color: #ef6c00;
+      }
+
+      /* ========== COPY BUTTON ========== */
+      .copy-button {
+        width: 100%;
+        background: linear-gradient(135deg, #0f9d58 0%, #0a7c42 100%);
+        border: none;
         border-radius: 14px;
-        padding: 10px 14px;
-        font-size: 0.7rem;
-        color: #b45309;
-        margin-bottom: 18px;
+        padding: 16px;
+        font-family: "Inter", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 15px rgba(15, 157, 88, 0.3);
+      }
+
+      .copy-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(15, 157, 88, 0.4);
+      }
+
+      .copy-button.copied {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      }
+
+      /* ========== DIVIDED NOTE ========== */
+      .divided-note {
+        background: #fff8e1;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 0.72rem;
+        color: #f57c00;
+        margin-bottom: 16px;
         display: none;
+        border-left: 3px solid #ff9800;
       }
 
       .divided-note.show {
         display: block;
       }
 
-      /* ========== HISTORY ========== */
+      /* ========== HISTORY CARD ========== */
       .history-card {
-        background: #ffffff;
-        border: 1px solid #edf0f4;
-        border-radius: 28px;
+        background: white;
+        border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
       }
 
       .history-head {
@@ -356,40 +483,47 @@
         justify-content: space-between;
         align-items: center;
         padding: 18px 20px;
-        border-bottom: 1px solid #f0f2f6;
+        border-bottom: 1px solid #f1f5f9;
+        background: #fafbfc;
       }
 
       .history-title {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.9rem;
-        color: #1e2f3e;
+        color: #1e293b;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+      }
+
+      .history-title i {
+        color: #0f9d58;
       }
 
       .hist-count {
-        background: #eff2f6;
-        border-radius: 40px;
-        padding: 2px 8px;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 50px;
+        padding: 4px 10px;
         font-size: 0.7rem;
-        font-weight: 600;
+        font-weight: 700;
+        color: #1b5e20;
       }
 
       .clear-history {
         background: none;
         border: none;
-        font-size: 0.7rem;
-        font-weight: 500;
-        color: #8c9ab0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #94a3b8;
         cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 30px;
-        transition: color 0.2s;
+        padding: 6px 12px;
+        border-radius: 8px;
+        transition: all 0.2s;
       }
 
       .clear-history:hover {
-        color: #d1453b;
+        background: #fee2e2;
+        color: #dc2626;
       }
 
       .history-list {
@@ -398,10 +532,21 @@
       }
 
       .history-empty {
-        padding: 40px 20px;
+        padding: 48px 20px;
         text-align: center;
+      }
+
+      .history-empty i {
+        font-size: 42px;
+        color: #cbd5e1;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .history-empty p {
         font-size: 0.85rem;
-        color: #a4b1c4;
+        color: #94a3b8;
+        font-weight: 500;
       }
 
       .hist-item {
@@ -409,69 +554,196 @@
         align-items: center;
         justify-content: space-between;
         padding: 14px 20px;
-        border-bottom: 1px solid #f1f3f7;
+        border-bottom: 1px solid #f8fafc;
         cursor: pointer;
-        transition: background 0.15s ease;
+        transition: all 0.15s ease;
       }
 
       .hist-item:hover {
-        background: #f9fbfd;
+        background: #f8fafc;
+        padding-left: 24px;
       }
 
       .hist-left {
         flex: 1;
         min-width: 0;
         display: flex;
-        align-items: baseline;
-        gap: 12px;
+        align-items: center;
+        gap: 10px;
         flex-wrap: wrap;
       }
 
       .hist-input {
         font-family: "IBM Plex Mono", monospace;
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: #3c4a62;
-        background: #f4f6fa;
-        padding: 4px 10px;
-        border-radius: 40px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 5px 10px;
+        border-radius: 8px;
         word-break: break-all;
       }
 
       .hist-arrow {
-        color: #b7c2d2;
-        font-size: 0.7rem;
+        color: #cbd5e1;
+        font-size: 0.8rem;
       }
 
       .hist-output {
         font-family: "IBM Plex Mono", monospace;
-        font-weight: 600;
-        font-size: 0.8rem;
+        font-weight: 700;
+        font-size: 0.78rem;
         color: #0f9d58;
-        background: #effaf3;
-        padding: 4px 10px;
-        border-radius: 40px;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        padding: 5px 10px;
+        border-radius: 8px;
       }
 
       .reuse-icon {
-        background: #f0f2f6;
-        width: 30px;
-        height: 30px;
-        border-radius: 40px;
+        background: #f1f5f9;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
-        color: #6b7c93;
-        transition: 0.1s;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        transition: all 0.15s;
+        margin-left: 10px;
       }
 
       .hist-item:hover .reuse-icon {
-        background: #e3e9f1;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
         color: #0f9d58;
       }
 
-      /* hide all extra elements */
+      /* ========== FOOTER ========== */
+      .footer-note {
+        text-align: center;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 24px;
+        padding: 16px;
+        font-weight: 500;
+      }
+
+      /* ========== RESPONSIVE ========== */
+      @media (max-width: 550px) {
+        .app-container {
+          padding: 0 12px 32px;
+        }
+
+        .bank-header {
+          padding: 14px 0;
+        }
+
+        .bank-title {
+          font-size: 1.1rem;
+        }
+
+        .bank-subtitle {
+          display: none;
+        }
+
+        .back-button {
+          padding: 6px 14px;
+          font-size: 0.8rem;
+        }
+
+        .back-button span {
+          display: none;
+        }
+
+        .full-number {
+          font-size: 1.35rem;
+          letter-spacing: 0.02em;
+        }
+
+        .details-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .detail-card {
+          padding: 12px 8px;
+        }
+
+        .detail-code {
+          font-size: 0.85rem;
+        }
+
+        .detail-name {
+          font-size: 0.55rem;
+        }
+
+        .detail-icon {
+          width: 30px;
+          height: 30px;
+        }
+
+        .detail-icon i {
+          font-size: 12px;
+        }
+
+        .hist-left {
+          gap: 6px;
+        }
+
+        .hist-input,
+        .hist-output {
+          font-size: 0.7rem;
+          padding: 4px 8px;
+        }
+
+        .result-card {
+          padding: 18px;
+          border-radius: 20px;
+        }
+
+        .input-card {
+          padding: 16px;
+          border-radius: 18px;
+        }
+
+        #acctInput {
+          font-size: 1rem;
+          padding: 12px 10px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .detail-card {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-align: left;
+          padding: 12px;
+        }
+
+        .detail-icon {
+          margin: 0;
+        }
+
+        .detail-content {
+          flex: 1;
+        }
+
+        .detail-label {
+          margin-bottom: 2px;
+        }
+
+        .detail-name {
+          min-height: auto;
+          justify-content: flex-start;
+        }
+      }
+
+      /* Hide extra elements */
       .hero,
       .format-pills,
       .struct-bar,
@@ -484,147 +756,275 @@
       .ex-grid {
         display: none !important;
       }
-
-      /* keep only footer minimal */
-      .footer-note {
-        text-align: center;
-        font-size: 0.7rem;
-        color: #aab4c4;
-        margin-top: 28px;
-        padding-top: 12px;
-        border-top: 1px solid #f0f2f6;
-      }
-
-      /* responsiveness */
-      @media (max-width: 550px) {
-        .app-container {
-          padding: 0 16px 40px;
-        }
-        .full-number {
-          font-size: 1.25rem;
-        }
-        .digit-value {
-          font-size: 0.9rem;
-        }
-        .digits-breakdown {
-          gap: 8px;
-        }
-        .digit-item {
-          padding: 8px 4px;
-        }
-        .hist-left {
-          gap: 6px;
-        }
-        .hist-input,
-        .hist-output {
-          font-size: 0.7rem;
-        }
-      }
     </style>
   </head>
   <body>
     <div class="app-container">
-      <!-- Bank header: logo + back button (no theme/live badge) -->
+      <!-- Bank Header -->
       <div class="bank-header">
-        <div class="logo-area">
-          <div class="bank-icon">
-            <svg viewBox="0 0 24 24" width="20" height="20">
-              <path
-                d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v2h16V6H4zm0 4v8h16v-8H4zm2 2h4v2H6v-2zm6 0h6v2h-6v-2z"
-              />
-            </svg>
-          </div>
-          <span class="bank-title">Account Finder</span>
-        </div>
-        <button class="back-button" id="backBtn"><span>←</span> Back</button>
-      </div>
-
-      <!-- Search input (auto convert) -->
-      <div class="search-section">
-        <div class="input-wrapper" id="searchWrapper">
-          <div class="input-with-icon">
-            <div class="search-icon-svg">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="M21 21l-4.35-4.35"></path>
-              </svg>
+        <div class="header-content">
+          <div class="logo-area">
+            <div class="bank-icon">
+              <i class="fa-solid fa-building-columns"></i>
             </div>
-            <input
-              type="text"
-              id="acctInput"
-              placeholder="Enter Account Number"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <button class="input-clear" id="clearBtn" aria-label="Clear">
-              ✕
-            </button>
+            <div>
+              <div class="bank-title">Account Finder</div>
+              <div class="bank-subtitle">RNSB Bank Tool</div>
+            </div>
           </div>
+          <button class="back-button" id="backBtn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back</span>
+          </button>
         </div>
-        <div class="input-info" id="inputInfoArea"></div>
       </div>
 
-      <!-- RESULT CARD (only shown when valid) -->
-      <div class="result-card" id="resultCard" style="display: none">
-        <div class="result-header">
-          <span class="result-badge">✓ Valid account</span>
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="input-card">
+          <div class="search-label">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Enter Account Number
+          </div>
+          <div class="input-wrapper" id="searchWrapper">
+            <div class="input-with-icon">
+              <div class="search-icon">
+                <i class="fa-solid fa-n"></i>
+              </div>
+              <input
+                type="text"
+                id="acctInput"
+                placeholder="e.g. 21 31 81189 or 0210031000008189"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button class="input-clear" id="clearBtn" aria-label="Clear">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+          <div class="input-info" id="inputInfoArea"></div>
         </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="result-card" id="resultCard" style="display: none">
+        <div class="result-badge">
+          <i class="fa-solid fa-check-circle"></i>
+          Valid Account Number
+        </div>
+
         <div class="full-number-block">
-          <div class="full-number-label">Full account number</div>
+          <div class="full-number-label">Full Account Number</div>
           <div class="full-number" id="fullNumberDisplay">—</div>
         </div>
-        <div class="digits-breakdown">
-          <div class="digit-item">
-            <div class="digit-label">Branch</div>
-            <div class="digit-value" id="branchVal">—</div>
+
+        <div class="details-grid">
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fa-solid fa-building"></i>
+            </div>
+            <div class="detail-content">
+              <div class="detail-label">Branch</div>
+              <div class="detail-code" id="branchCode">—</div>
+              <div class="detail-name" id="branchName">—</div>
+            </div>
           </div>
-          <div class="digit-item">
-            <div class="digit-label">Scheme</div>
-            <div class="digit-value" id="schemeVal">—</div>
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div class="detail-content">
+              <div class="detail-label">Scheme</div>
+              <div class="detail-code" id="schemeCode">—</div>
+              <div class="detail-name scheme-name" id="schemeName">—</div>
+            </div>
           </div>
-          <div class="digit-item">
-            <div class="digit-label">Account</div>
-            <div class="digit-value" id="accountVal">—</div>
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="detail-content">
+              <div class="detail-label">Account</div>
+              <div class="detail-code" id="accountNum">—</div>
+              <div class="detail-name account-type" id="accountType">—</div>
+            </div>
           </div>
         </div>
+
         <div class="divided-note" id="dividedNote"></div>
+
         <button class="copy-button" id="copyBtn">
-          <span id="copyIcon">📋</span>
-          <span id="copyLabel">Copy full number</span>
+          <i class="fa-regular fa-copy" id="copyIcon"></i>
+          <span id="copyLabel">Copy Full Number</span>
         </button>
       </div>
 
-      <!-- HISTORY CARD -->
+      <!-- History Card -->
       <div class="history-card">
         <div class="history-head">
           <div class="history-title">
-            Recent lookups
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Recent Lookups
             <span class="hist-count" id="histCount">0</span>
           </div>
-          <button class="clear-history" id="hclearBtn">Clear</button>
+          <button class="clear-history" id="hclearBtn">Clear All</button>
         </div>
         <div class="history-list" id="histList">
           <div class="history-empty" id="histEmptyMsg">
-            No recent lookups yet
+            <i class="fa-solid fa-clock"></i>
+            <p>No recent lookups yet</p>
           </div>
         </div>
       </div>
+
       <div class="footer-note">
-        Secured format · Branch(3) Scheme(4) Account(8)
+        <i class="fa-solid fa-shield-halved"></i>
+        Format: Branch(3) + Scheme(4) + Account(8) = 15 Digits
       </div>
     </div>
 
     <script>
-      // ---------- PARSING ENGINE (UNCHANGED) ----------
+      // ========== DATA ==========
+      const branches = [
+        { code: "010", name: "PARABAZAR BRANCH" },
+        { code: "011", name: "UDYOGNAGAR BRANCH" },
+        { code: "012", name: "KEVADAWADI-S.V.P.ROAD BR" },
+        { code: "013", name: "JUNCTION PLOT BRANCH" },
+        { code: "014", name: "BEDIPARA BRANCH" },
+        { code: "015", name: "YAGNIK ROAD BRANCH" },
+        { code: "016", name: "MOBILE BRANCH" },
+        { code: "017", name: "SORATHIYAWADI BRANCH" },
+        { code: "018", name: "MAVDI PLOT BRANCH" },
+        { code: "019", name: "BHUPENDRA ROAD BRANCH" },
+        { code: "020", name: "KLV ROAD BRANCH" },
+        { code: "021", name: "RAIYA ROAD BRANCH" },
+        { code: "022", name: "150 FEET RING ROAD BRANCH" },
+        { code: "023", name: "KOTHARIA MAIN ROAD BRANCH" },
+        { code: "041", name: "WANKANER BRANCH" },
+        { code: "042", name: "JETPUR BRANCH" },
+        { code: "043", name: "DHORAJI BRANCH" },
+        { code: "044", name: "UPLETA BRANCH" },
+        { code: "045", name: "MORBI BRANCH" },
+        { code: "046", name: "PADADHARI BRANCH" },
+        { code: "047", name: "JASDAN BRANCH" },
+        { code: "048", name: "AHMEDABAD BRANCH" },
+        { code: "049", name: "BHUJ BRANCH" },
+        { code: "050", name: "SURENDRANAGAR BRANCH" },
+        { code: "051", name: "SURAT BRANCH" },
+        { code: "052", name: "KALBADEVI ROAD BRANCH" },
+        { code: "053", name: "JUNAGADH BRANCH" },
+        { code: "056", name: "GANDHIDHAM BRANCH" },
+        { code: "057", name: "JAMNAGAR BRANCH" },
+        { code: "058", name: "HALVAD BRANCH" },
+        { code: "059", name: "VADODARA BRANCH" },
+        { code: "060", name: "GHATKOPAR BRANCH" },
+        { code: "061", name: "BAPUNAGAR BRANCH" },
+        { code: "062", name: "GANDHINAGAR BRANCH" },
+        { code: "063", name: "SURAT VARACHA BRANCH" },
+        { code: "064", name: "MALAD BRANCH" },
+        { code: "065", name: "NAGPUR BRANCH" },
+        { code: "066", name: "BHAVNAGAR BRANCH" },
+      ];
+
+      const LOAN_SCHEMES = [
+        { code: "0066", desc: "LOAN AGAINST FIXED DEPOSITS66" },
+        { code: "0139", desc: "SURETY LOAN" },
+        { code: "0140", desc: "NOMINAL SURETY LOAN" },
+        { code: "0141", desc: "LAND AND BUILDING LOAN" },
+        { code: "0142", desc: "INDUSTRIAL LOAN (MACHINERY)" },
+        { code: "0143", desc: "SECURED LOAN" },
+        { code: "0144", desc: "GOLD LOAN - BULLET REPAYMENT" },
+        { code: "0147", desc: "LOAN AGAINST NSC/KVP/LIC" },
+        { code: "0152", desc: "UNSECURED LOAN" },
+        { code: "0155", desc: "BANKABLE LOAN (P.M. ROJGAR YOJNA)" },
+        { code: "0157", desc: "STAFF DOMESTIC LOAN" },
+        { code: "0159", desc: "STAFF HOUSING LOAN" },
+        { code: "0161", desc: "LOAN AGAINST SHARE/DEBENTURE" },
+        { code: "0162", desc: "STAFF CONCESSIONAL DOMESTIC LOAN" },
+        { code: "0163", desc: "INDUSTRIAL LOAN (LAND AND BUILDING)" },
+        { code: "0168", desc: "EDUCATION LOAN" },
+        { code: "0186", desc: "EARTH-QUAKE LOAN (GENERAL)" },
+        { code: "0187", desc: "EARTHQUAKE LOAN (INDUSTRIAL)" },
+        { code: "0239", desc: "SURETY LOAN (H.O.-DAVA)" },
+        { code: "0297", desc: "STAFF PERSONAL LOAN" },
+        { code: "0339", desc: "SURETY LOAN (OVERDUE)" },
+        { code: "0340", desc: "NOMINAL SURETY LOAN (OVERDUE)" },
+        { code: "0341", desc: "LAND AND BUILDING LOAN (OVERDUE)" },
+        { code: "0342", desc: "INDUSTRIAL LOAN (OVERDUE)" },
+        { code: "0343", desc: "SECURED LOAN (OVERDUE)" },
+        { code: "0355", desc: "BANKABLE LOAN OVERDUE" },
+        { code: "0439", desc: "SURETY LOAN (H.O.-OVERDUE)" },
+        { code: "0440", desc: "NOMINAL SURETY LOAN (H.O.-OVERDUE)" },
+        { code: "0441", desc: "LAND & BUILDING LOAN (H.O.-OVERDUE)" },
+        { code: "0442", desc: "INDUSTRIAL LOAN (H.O.-OVERDUE)" },
+        { code: "0443", desc: "SECURED LOAN (H.O.-OVERDUE)" },
+        { code: "0640", desc: "NOMINAL LOAN (H.O.-DAVA)" },
+        { code: "0643", desc: "SECURED LOAN (H.O.-DAVA)" },
+        { code: "0717", desc: "NAGARIK LAGHU UDYOG VEPAR LOAN" },
+        { code: "0719", desc: "SABHASAD SUVIDHA LOAN" },
+        { code: "0720", desc: "LAND & BUILDING LOAN-CM-AVAS YOJNA" },
+        { code: "0721", desc: "HOME APPLIANCES AND VEHICLE LOAN" },
+        { code: "0722", desc: "STAFF DOMESTIC/FURNITURE LOAN" },
+        { code: "0741", desc: "REVERSE MORTGAGE" },
+        { code: "0742", desc: "FURNITURE LOAN" },
+        { code: "0744", desc: "GOLD LOAN - SONA" },
+        { code: "0767", desc: "KALPATARU DHIRAN" },
+        { code: "0775", desc: "NAGARIK E-BIKE LOAN (GUCBF)" },
+        { code: "0792", desc: "VYAPAR VRUDDHI DHIRAN YOJNA LOAN" },
+        { code: "0793", desc: "PMEGP-TERM LOAN" },
+        { code: "0795", desc: "MISSION NEXT GENERATION LOAN A/C" },
+        { code: "0796", desc: "UNSECURED LOAN UPTO 1 LAC" },
+        { code: "0797", desc: "AATMANIRBHAR GUJ LOAN UPTO 1 LAC" },
+        { code: "0798", desc: "COVID-19 5 LAC" },
+        { code: "0799", desc: "COVID-19 25% ADDITIONAL TERM LOAN" },
+        { code: "0814", desc: "SECURED LOAN UPTO 1 LAC" },
+        { code: "0844", desc: "AATMANIRBHAR GUJARAT SAHAY YOJANA 2" },
+        { code: "0846", desc: "MUKHYAMANTRI MAHILA UTKARSH YOJANA" },
+        { code: "0849", desc: "BATTERY OPERATED TWO WHEELER LOANS" },
+        { code: "0850", desc: "SOLAR LOAN MSME" },
+        { code: "0854", desc: "MONTHLY INT BULLET GOLD LOAN(12MON)" },
+        { code: "0856", desc: "TATKAL LOAN" },
+        { code: "0857", desc: "LIFE POLICY PREMIUM LOAN" },
+        { code: "0866", desc: "LOAN AGAINST FIXED DEPOSITS" },
+        { code: "0862", desc: "CAR LOAN" },
+        { code: "0790", desc: "AGRICULTURE ALLIED ACTIVITY LOAN" },
+        { code: "0852", desc: "3 MONTHS BULLET GOLD LOAN" },
+        { code: "0853", desc: "6 MONTHS BULLET GOLD LOAN" },
+        { code: "0855", desc: "EMI BASED GOLD LOAN" },
+        { code: "0858", desc: "SOVEREIGN GOLD BOND(SGB-BULLET PMT)" },
+        { code: "0860", desc: "SOVEREIGN GOLD BOND(SGB-TERM LOAN)" },
+      ];
+      0;
+
+      // Account Type Mappings
+      const ACCOUNT_TYPES = {
+        "0031": { name: "Savings Account", short: "SB" },
+        "0038": { name: "Current Account", short: "CA" },
+        "0032": { name: "Current Account", short: "CA" },
+        "0033": { name: "Fixed Deposit", short: "FD" },
+        "0034": { name: "Recurring Deposit", short: "RD" },
+        "0035": { name: "Overdraft Account", short: "OD" },
+        "0036": { name: "Cash Credit", short: "CC" },
+        "0037": { name: "Loan Account", short: "LN" },
+      };
+
+      // ========== LOOKUP FUNCTIONS ==========
+      function getBranchName(code) {
+        const branch = branches.find((b) => b.code === code);
+        return branch ? branch.name : null;
+      }
+
+      function getSchemeName(code) {
+        const scheme = LOAN_SCHEMES.find((s) => s.code === code);
+        return scheme ? scheme.desc : null;
+      }
+
+      function getAccountType(schemeCode) {
+        return ACCOUNT_TYPES[schemeCode] || null;
+      }
+
+      // ========== PARSING ENGINE ==========
       function pad(v, n) {
         return String(v).padStart(n, "0");
       }
@@ -772,9 +1172,9 @@
         };
       }
 
-      // ---------- HISTORY STORAGE (unchanged) ----------
-      const HIST_KEY = "acctfind_bank_v1";
-      const MAX_HIST = 10;
+      // ========== HISTORY STORAGE ==========
+      const HIST_KEY = "acctfind_bank_v2";
+      const MAX_HIST = 15;
 
       function loadHist() {
         try {
@@ -793,6 +1193,8 @@
         h.unshift({
           input: inputVal,
           output: result.full,
+          branchCode: result.branch,
+          schemeCode: result.scheme,
           key: result.typeKey,
         });
         saveHist(h.slice(0, MAX_HIST));
@@ -805,8 +1207,11 @@
         const histCountSpan = document.getElementById("histCount");
         histCountSpan.textContent = h.length;
         if (!h.length) {
-          histContainer.innerHTML =
-            '<div class="history-empty">No recent lookups yet</div>';
+          histContainer.innerHTML = `
+            <div class="history-empty">
+              <i class="fa-solid fa-clock"></i>
+              <p>No recent lookups yet</p>
+            </div>`;
           return;
         }
         histContainer.innerHTML = "";
@@ -814,13 +1219,13 @@
           const div = document.createElement("div");
           div.className = "hist-item";
           div.innerHTML = `
-        <div class="hist-left">
-          <span class="hist-input">${escapeHtml(item.input)}</span>
-          <span class="hist-arrow">→</span>
-          <span class="hist-output">${item.output}</span>
-        </div>
-        <div class="reuse-icon">↗</div>
-      `;
+            <div class="hist-left">
+              <span class="hist-input">${escapeHtml(item.input)}</span>
+              <span class="hist-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              <span class="hist-output">${item.output}</span>
+            </div>
+            <div class="reuse-icon"><i class="fa-solid fa-rotate-right"></i></div>
+          `;
           div.addEventListener("click", (e) => {
             e.stopPropagation();
             const inputEl = document.getElementById("acctInput");
@@ -834,33 +1239,40 @@
 
       function escapeHtml(str) {
         return str.replace(/[&<>]/g, function (m) {
-          if (m === "&") return "&amp;";
-          if (m === "<") return "&lt;";
-          if (m === ">") return "&gt;";
+          if (m === "&") return "&";
+          if (m === "<") return "<";
+          if (m === ">") return ">";
           return m;
         });
       }
 
-      // ---------- UI STATE ----------
+      // ========== UI ELEMENTS ==========
       let currentParsedResult = null;
       const inputEl = document.getElementById("acctInput");
       const clearBtn = document.getElementById("clearBtn");
       const resultCard = document.getElementById("resultCard");
       const fullNumberSpan = document.getElementById("fullNumberDisplay");
-      const branchSpan = document.getElementById("branchVal");
-      const schemeSpan = document.getElementById("schemeVal");
-      const accountSpan = document.getElementById("accountVal");
+      const branchCodeSpan = document.getElementById("branchCode");
+      const branchNameSpan = document.getElementById("branchName");
+      const schemeCodeSpan = document.getElementById("schemeCode");
+      const schemeNameSpan = document.getElementById("schemeName");
+      const accountNumSpan = document.getElementById("accountNum");
+      const accountTypeSpan = document.getElementById("accountType");
       const dividedNoteDiv = document.getElementById("dividedNote");
       const copyButton = document.getElementById("copyBtn");
-      const copyIconSpan = document.getElementById("copyIcon");
+      const copyIcon = document.getElementById("copyIcon");
       const copyLabelSpan = document.getElementById("copyLabel");
       const infoArea = document.getElementById("inputInfoArea");
       const backBtn = document.getElementById("backBtn");
 
       function showErrorMsg(msg) {
-        infoArea.innerHTML = `<span class="error-message">⚠️ ${msg}</span>`;
+        infoArea.innerHTML = `<div class="error-message"><i class="fa-solid fa-circle-exclamation"></i> ${msg}</div>`;
         resultCard.style.display = "none";
         currentParsedResult = null;
+      }
+
+      function showFormatHint() {
+        infoArea.innerHTML = `<div class="format-hint"><i class="fa-solid fa-lightbulb"></i> Format: Branch(3) / Scheme(4) / Account(8) → 15 digits. Example: 21 31 81189 or 0210031000008189</div>`;
       }
 
       function hideErrorMsg() {
@@ -874,28 +1286,67 @@
           return false;
         }
         currentParsedResult = result;
+
+        // Full number
         fullNumberSpan.textContent = result.full;
-        branchSpan.textContent = result.branch;
-        schemeSpan.textContent = result.scheme;
-        accountSpan.textContent = result.account;
+
+        // Branch info
+        branchCodeSpan.textContent = result.branch;
+        const branchName = getBranchName(result.branch);
+        branchNameSpan.textContent = branchName || "Unknown Branch";
+        if (!branchName) {
+          branchNameSpan.style.color = "#dc2626";
+        } else {
+          branchNameSpan.style.color = "#0f9d58";
+        }
+
+        // Scheme info
+        schemeCodeSpan.textContent = result.scheme;
+        const schemeName = getSchemeName(result.scheme);
+        const accountType = getAccountType(result.scheme);
+
+        if (accountType) {
+          schemeNameSpan.textContent = accountType.name;
+          schemeNameSpan.style.color = "#1565c0";
+        } else if (schemeName) {
+          schemeNameSpan.textContent = schemeName;
+          schemeNameSpan.style.color = "#1565c0";
+        } else {
+          schemeNameSpan.textContent = "Unknown Scheme";
+          schemeNameSpan.style.color = "#dc2626";
+        }
+
+        // Account info
+        accountNumSpan.textContent = result.account;
+
+        if (accountType) {
+          accountTypeSpan.textContent = accountType.short + " ✓";
+          accountTypeSpan.style.color = "#ef6c00";
+        } else {
+          accountTypeSpan.textContent = "—";
+          accountTypeSpan.style.color = "#94a3b8";
+        }
+
+        // Divided note
         if (result.typeKey === "divided") {
-          dividedNoteDiv.textContent = `÷ Divided format: sub‑part ${result.sub} + main ${result.main} → account ${result.account}`;
+          dividedNoteDiv.innerHTML = `<i class="fa-solid fa-info-circle"></i> Divided format: sub-part ${result.sub} + main ${result.main} → account ${result.account}`;
           dividedNoteDiv.classList.add("show");
         } else {
           dividedNoteDiv.classList.remove("show");
         }
+
         resultCard.style.display = "block";
         return true;
       }
 
       function handleAutoConvert() {
         const rawValue = inputEl.value.trim();
-        // clear button visibility
         clearBtn.classList.toggle("show", rawValue.length > 0);
 
         if (rawValue === "") {
           resultCard.style.display = "none";
           hideErrorMsg();
+          showFormatHint();
           currentParsedResult = null;
           return;
         }
@@ -908,37 +1359,36 @@
         hideErrorMsg();
         const success = updateResultUI(parsed);
         if (success && parsed.full) {
-          // auto-save to history only if we have a valid full number
           addHist(rawValue, parsed);
         }
       }
 
-      // auto-convert on every input
+      // ========== EVENT LISTENERS ==========
       inputEl.addEventListener("input", () => {
         handleAutoConvert();
       });
 
-      // clear button
       clearBtn.addEventListener("click", () => {
         inputEl.value = "";
         clearBtn.classList.remove("show");
         resultCard.style.display = "none";
         hideErrorMsg();
+        showFormatHint();
         currentParsedResult = null;
         inputEl.focus();
       });
 
-      // copy handler
       function onCopied() {
         copyButton.classList.add("copied");
-        copyIconSpan.textContent = "✅";
+        copyIcon.className = "fa-solid fa-check";
         copyLabelSpan.textContent = "Copied!";
         setTimeout(() => {
           copyButton.classList.remove("copied");
-          copyIconSpan.textContent = "📋";
-          copyLabelSpan.textContent = "Copy full number";
+          copyIcon.className = "fa-regular fa-copy";
+          copyLabelSpan.textContent = "Copy Full Number";
         }, 2000);
       }
+
       copyButton.addEventListener("click", () => {
         if (currentParsedResult && currentParsedResult.full) {
           const textToCopy = currentParsedResult.full;
@@ -952,6 +1402,7 @@
           }
         }
       });
+
       function fallbackCopy(t) {
         const ta = document.createElement("textarea");
         ta.value = t;
@@ -965,20 +1416,19 @@
         document.body.removeChild(ta);
       }
 
-      // reset history
       document.getElementById("hclearBtn").addEventListener("click", () => {
         saveHist([]);
         renderHist();
       });
 
-      // back button (simple navigation simulation)
       backBtn.addEventListener("click", () => {
         if (window.history.length > 1) window.history.back();
         else alert("Go back to previous page");
       });
 
-      // initial render
+      // ========== INIT ==========
       renderHist();
+      showFormatHint();
       inputEl.focus();
     </script>
   </body>

@@ -520,6 +520,76 @@
           font-size: 0.7rem;
         }
       }
+
+      /* ========== MOBILE UX: Result above input ========== */
+      @media (max-width: 768px) {
+        .app-container {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          padding-top: 0;
+        }
+
+        .bank-header {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          background: #ffffff;
+        }
+
+        /* Result card: sticky at top, above input */
+        .result-card {
+          order: -1;
+          position: sticky;
+          top: 70px;
+          z-index: 15;
+          background: #ffffff;
+          margin-bottom: 0;
+          border-radius: 0 0 28px 28px;
+          box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.06),
+            0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Search section: positioned below result */
+        .search-section {
+          order: 0;
+          margin-top: 16px;
+          margin-bottom: 24px;
+        }
+
+        /* History card: at the bottom */
+        .history-card {
+          order: 1;
+          margin-top: auto;
+        }
+
+        .footer-note {
+          order: 2;
+        }
+
+        /* Hide result when empty - ensure smooth transition */
+        .result-card[style*="display: none"],
+        .result-card[style*="display:none"] {
+          position: static;
+          order: 1;
+        }
+      }
+
+      /* Desktop: keep original order (result after input) */
+      @media (min-width: 769px) {
+        .result-card {
+          order: 0;
+          position: static;
+        }
+        .search-section {
+          order: 1;
+        }
+        .history-card {
+          order: 2;
+          margin-top: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -537,6 +607,36 @@
           <span class="bank-title">Account Finder</span>
         </div>
         <button class="back-button" id="backBtn"><span>←</span> Back</button>
+      </div>
+
+      <!-- RESULT CARD (only shown when valid) - positioned above input on mobile -->
+      <div class="result-card" id="resultCard" style="display: none">
+        <div class="result-header">
+          <span class="result-badge">✓ Valid account</span>
+        </div>
+        <div class="full-number-block">
+          <div class="full-number-label">Full account number</div>
+          <div class="full-number" id="fullNumberDisplay">—</div>
+        </div>
+        <div class="digits-breakdown">
+          <div class="digit-item">
+            <div class="digit-label">Branch</div>
+            <div class="digit-value" id="branchVal">—</div>
+          </div>
+          <div class="digit-item">
+            <div class="digit-label">Scheme</div>
+            <div class="digit-value" id="schemeVal">—</div>
+          </div>
+          <div class="digit-item">
+            <div class="digit-label">Account</div>
+            <div class="digit-value" id="accountVal">—</div>
+          </div>
+        </div>
+        <div class="divided-note" id="dividedNote"></div>
+        <button class="copy-button" id="copyBtn">
+          <span id="copyIcon">📋</span>
+          <span id="copyLabel">Copy full number</span>
+        </button>
       </div>
 
       <!-- Search input (auto convert) -->
@@ -571,36 +671,6 @@
           </div>
         </div>
         <div class="input-info" id="inputInfoArea"></div>
-      </div>
-
-      <!-- RESULT CARD (only shown when valid) -->
-      <div class="result-card" id="resultCard" style="display: none">
-        <div class="result-header">
-          <span class="result-badge">✓ Valid account</span>
-        </div>
-        <div class="full-number-block">
-          <div class="full-number-label">Full account number</div>
-          <div class="full-number" id="fullNumberDisplay">—</div>
-        </div>
-        <div class="digits-breakdown">
-          <div class="digit-item">
-            <div class="digit-label">Branch</div>
-            <div class="digit-value" id="branchVal">—</div>
-          </div>
-          <div class="digit-item">
-            <div class="digit-label">Scheme</div>
-            <div class="digit-value" id="schemeVal">—</div>
-          </div>
-          <div class="digit-item">
-            <div class="digit-label">Account</div>
-            <div class="digit-value" id="accountVal">—</div>
-          </div>
-        </div>
-        <div class="divided-note" id="dividedNote"></div>
-        <button class="copy-button" id="copyBtn">
-          <span id="copyIcon">📋</span>
-          <span id="copyLabel">Copy full number</span>
-        </button>
       </div>
 
       <!-- HISTORY CARD -->

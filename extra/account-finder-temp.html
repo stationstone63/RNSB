@@ -1,0 +1,1483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Number Finder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== CSS VARIABLES ===== */
+      :root {
+        --bg: #f0f4fb;
+        --surface: #ffffff;
+        --surface2: #f7f9fd;
+        --border: #dde4f0;
+        --border-focus: #4a7cf7;
+        --text-primary: #0f1c3f;
+        --text-secondary: #5a6a8a;
+        --text-muted: #9aaac8;
+        --accent: #4a7cf7;
+        --accent-light: #e8effe;
+        --accent-dark: #2f5de0;
+        --success: #22c48a;
+        --success-light: #e6fbf3;
+        --error: #f7564a;
+        --error-light: #fff0ef;
+        --warning: #f7a14a;
+        --warning-light: #fff7ed;
+        --segment-branch: #4a7cf7;
+        --segment-scheme: #9b5cf7;
+        --segment-account: #22c48a;
+        --shadow-sm: 0 1px 4px rgba(15, 28, 63, 0.08);
+        --shadow-md: 0 4px 20px rgba(15, 28, 63, 0.1);
+        --shadow-lg: 0 8px 40px rgba(15, 28, 63, 0.13);
+        --radius: 14px;
+        --radius-sm: 8px;
+        --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      [data-theme="dark"] {
+        --bg: #0d1526;
+        --surface: #162040;
+        --surface2: #1c2a50;
+        --border: #243060;
+        --border-focus: #4a7cf7;
+        --text-primary: #e8effe;
+        --text-secondary: #8aa0cc;
+        --text-muted: #4a6090;
+        --accent-light: #1a2a5a;
+        --success-light: #0d2a20;
+        --error-light: #2a100d;
+        --warning-light: #2a1e0d;
+        --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35);
+        --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ===== RESET & BASE ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition:
+          background var(--transition),
+          color var(--transition);
+      }
+
+      /* ===== BACKGROUND GRID ===== */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.35;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ===== HEADER ===== */
+      header {
+        width: 100%;
+        padding: 18px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--accent);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(74, 124, 247, 0.35);
+      }
+
+      .logo-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: white;
+      }
+
+      .logo-text {
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+      }
+
+      .logo-text span {
+        color: var(--accent);
+      }
+
+      /* ===== DARK MODE TOGGLE ===== */
+      .theme-toggle {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        font-family: "Sora", sans-serif;
+        font-weight: 500;
+        color: var(--text-secondary);
+        transition: all var(--transition);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: var(--shadow-md);
+      }
+
+      .theme-icon {
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      /* ===== MAIN LAYOUT ===== */
+      main {
+        width: 100%;
+        max-width: 640px;
+        padding: 0 16px 60px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== HERO SECTION ===== */
+      .hero {
+        text-align: center;
+        padding: 24px 0 32px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1.5px solid var(--accent);
+        border-radius: 999px;
+        padding: 4px 14px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        opacity: 0.85;
+      }
+
+      .hero h1 {
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+
+      .hero h1 span {
+        color: var(--accent);
+      }
+
+      .hero p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 300;
+        line-height: 1.7;
+      }
+
+      /* ===== FORMAT INDICATOR ===== */
+      .format-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+
+      .format-chip {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 11px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ===== CARD ===== */
+      .card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 18px;
+        transition:
+          background var(--transition),
+          border-color var(--transition);
+      }
+
+      /* ===== INPUT SECTION ===== */
+      .input-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .input-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .input-wrapper {
+        position: relative;
+        margin-bottom: 14px;
+      }
+
+      #accountInput {
+        width: 100%;
+        background: var(--surface2);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px 50px 16px 18px;
+        font-size: 1.1rem;
+        font-family: "DM Mono", monospace;
+        font-weight: 500;
+        color: var(--text-primary);
+        outline: none;
+        transition:
+          border-color var(--transition),
+          box-shadow var(--transition),
+          background var(--transition);
+        letter-spacing: 0.04em;
+      }
+
+      #accountInput::placeholder {
+        color: var(--text-muted);
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+
+      #accountInput:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 4px rgba(74, 124, 247, 0.12);
+        background: var(--surface);
+      }
+
+      #accountInput.has-error {
+        border-color: var(--error);
+        box-shadow: 0 0 0 4px rgba(247, 86, 74, 0.1);
+      }
+
+      #accountInput.has-success {
+        border-color: var(--success);
+        box-shadow: 0 0 0 4px rgba(34, 196, 138, 0.1);
+      }
+
+      .input-clear {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        padding: 4px;
+        line-height: 1;
+        border-radius: 50%;
+        display: none;
+        transition:
+          color var(--transition),
+          background var(--transition);
+      }
+
+      .input-clear:hover {
+        color: var(--error);
+        background: var(--error-light);
+      }
+
+      /* ===== DETECTED FORMAT TAG ===== */
+      .detected-format {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.76rem;
+        color: var(--text-secondary);
+        margin-bottom: 14px;
+        padding: 6px 12px;
+        background: var(--surface2);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+      }
+
+      .detected-format.visible {
+        display: flex;
+      }
+
+      .detected-format .tag {
+        font-family: "DM Mono", monospace;
+        font-weight: 500;
+        color: var(--accent);
+        background: var(--accent-light);
+        border-radius: 4px;
+        padding: 1px 7px;
+        font-size: 0.73rem;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 13px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        font-weight: 600;
+        font-family: "Sora", sans-serif;
+        cursor: pointer;
+        border: none;
+        transition: all var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 3px 12px rgba(74, 124, 247, 0.35);
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-dark);
+        box-shadow: 0 5px 20px rgba(74, 124, 247, 0.45);
+        transform: translateY(-1px);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-ghost {
+        background: var(--surface2);
+        color: var(--text-secondary);
+        border: 1.5px solid var(--border);
+      }
+
+      .btn-ghost:hover {
+        background: var(--error-light);
+        color: var(--error);
+        border-color: var(--error);
+      }
+
+      /* ===== RESULT SECTION ===== */
+      .result-section {
+        display: none;
+        animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .result-section.visible {
+        display: block;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .result-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .result-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ===== NUMBER DISPLAY ===== */
+      .number-display {
+        background: var(--success-light);
+        border: 2px solid var(--success);
+        border-radius: var(--radius-sm);
+        padding: 20px 20px 16px;
+        margin-bottom: 12px;
+      }
+
+      .number-full {
+        font-family: "DM Mono", monospace;
+        font-size: clamp(1.4rem, 5vw, 1.9rem);
+        font-weight: 500;
+        color: var(--text-primary);
+        letter-spacing: 0.06em;
+        word-break: break-all;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+
+      .number-full .seg {
+        display: inline-block;
+        position: relative;
+        padding: 0 1px;
+        border-radius: 3px;
+        transition: all 0.15s;
+      }
+
+      .number-full .seg-branch {
+        color: var(--segment-branch);
+      }
+      .number-full .seg-scheme {
+        color: var(--segment-scheme);
+      }
+      .number-full .seg-account {
+        color: var(--segment-account);
+      }
+
+      .seg-divider {
+        color: var(--text-muted);
+        margin: 0 1px;
+        font-size: 0.9em;
+      }
+
+      /* ===== SEGMENT LEGEND ===== */
+      .segment-legend {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .seg-tag {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .seg-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .seg-dot.branch {
+        background: var(--segment-branch);
+      }
+      .seg-dot.scheme {
+        background: var(--segment-scheme);
+      }
+      .seg-dot.account {
+        background: var(--segment-account);
+      }
+
+      /* ===== BREAKDOWN ===== */
+      .breakdown {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .breakdown-item {
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 10px;
+        text-align: center;
+      }
+
+      .breakdown-item .bi-label {
+        font-size: 0.67rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-muted);
+        margin-bottom: 5px;
+      }
+
+      .breakdown-item .bi-val {
+        font-family: "DM Mono", monospace;
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+      }
+
+      .breakdown-item.branch .bi-val {
+        color: var(--segment-branch);
+      }
+      .breakdown-item.scheme .bi-val {
+        color: var(--segment-scheme);
+      }
+      .breakdown-item.account .bi-val {
+        color: var(--segment-account);
+      }
+
+      .breakdown-item .bi-digits {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      /* ===== COPY BUTTON ===== */
+      .copy-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1.5px solid var(--accent);
+        font-size: 0.88rem;
+        font-weight: 600;
+        font-family: "Sora", sans-serif;
+        cursor: pointer;
+        transition: all var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+      }
+
+      .copy-btn:hover {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 3px 12px rgba(74, 124, 247, 0.3);
+      }
+
+      .copy-btn.copied {
+        background: var(--success);
+        color: white;
+        border-color: var(--success);
+      }
+
+      /* ===== ERROR MESSAGE ===== */
+      .error-msg {
+        display: none;
+        background: var(--error-light);
+        border: 1.5px solid var(--error);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        color: var(--error);
+        font-size: 0.85rem;
+        font-weight: 500;
+        align-items: center;
+        gap: 8px;
+        animation: slideIn 0.25s ease;
+        margin-top: 12px;
+      }
+
+      .error-msg.visible {
+        display: flex;
+      }
+
+      /* ===== HISTORY SECTION ===== */
+      .history-section {
+        margin-top: 0;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .history-title {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      .history-clear-btn {
+        background: none;
+        border: none;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-family: "Sora", sans-serif;
+        transition: color var(--transition);
+        padding: 2px 6px;
+      }
+
+      .history-clear-btn:hover {
+        color: var(--error);
+      }
+
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .history-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--transition);
+        gap: 10px;
+      }
+
+      .history-item:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+
+      .history-input {
+        font-family: "DM Mono", monospace;
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .history-arrow {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+
+      .history-output {
+        font-family: "DM Mono", monospace;
+        font-size: 0.82rem;
+        color: var(--success);
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      /* ===== EMPTY STATE ===== */
+      .empty-history {
+        text-align: center;
+        padding: 20px;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+      }
+
+      /* ===== FORMAT EXAMPLES ===== */
+      .examples-section {
+        margin-top: 0;
+      }
+
+      .examples-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      @media (max-width: 420px) {
+        .examples-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .example-item {
+        padding: 10px 13px;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--transition);
+      }
+
+      .example-item:hover {
+        border-color: var(--accent);
+        background: var(--accent-light);
+        transform: translateX(2px);
+      }
+
+      .ex-input {
+        font-family: "DM Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 3px;
+      }
+
+      .ex-output {
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      .ex-arrow {
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        margin: 0 3px;
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        padding: 20px;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== PULSE ANIMATION for live ===== */
+      .live-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: var(--success);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+
+      /* ===== DIGIT COUNT BADGE ===== */
+      .digit-count {
+        font-size: 0.7rem;
+        font-family: "DM Mono", monospace;
+        color: var(--text-muted);
+        position: absolute;
+        right: 44px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+
+      /* ===== RESPONSIVE TWEAKS ===== */
+      @media (max-width: 500px) {
+        .card {
+          padding: 20px 16px;
+        }
+        .btn-row {
+          flex-direction: column;
+        }
+        .breakdown {
+          grid-template-columns: 1fr;
+        }
+        .breakdown-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-align: left;
+          padding: 10px 14px;
+        }
+        .breakdown-item .bi-label {
+          margin-bottom: 0;
+          min-width: 80px;
+        }
+        .breakdown-item .bi-digits {
+          margin-top: 0;
+          margin-left: auto;
+        }
+      }
+
+      @media (min-width: 600px) {
+        main {
+          padding: 0 24px 60px;
+        }
+        .number-full {
+          letter-spacing: 0.1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v2h16V6H4zm0 4v8h16v-8H4zm2 2h4v2H6v-2zm6 0h6v2h-6v-2z"
+            />
+          </svg>
+        </div>
+        <div class="logo-text">Account<span>Finder</span></div>
+      </div>
+      <button class="theme-toggle" id="themeToggle">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark</span>
+      </button>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-badge">
+          <span class="live-dot"></span>&nbsp;Live Conversion
+        </div>
+        <h1>Smart Account<br /><span>Number Finder</span></h1>
+        <p>
+          Enter any format — messy, short, divided —<br />get the correct
+          15-digit structured account number instantly.
+        </p>
+        <div class="format-bar">
+          <span class="format-chip">BBB</span>
+          <span class="format-chip">SSSS</span>
+          <span class="format-chip">AAAAAAAA</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted)"
+            >= 15 digits</span
+          >
+        </div>
+      </div>
+
+      <!-- INPUT CARD -->
+      <div class="card">
+        <div class="input-label">Enter Account Number</div>
+
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="accountInput"
+            placeholder="e.g. 21/717/2/3455 or 21-31-4555"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span class="digit-count" id="digitCount"></span>
+          <button class="input-clear" id="clearBtn" title="Clear input">
+            ✕
+          </button>
+        </div>
+
+        <!-- Detected format -->
+        <div class="detected-format" id="detectedFormat">
+          <span>🔍 Detected:</span>
+          <span class="tag" id="detectedTag"></span>
+          <span id="detectedDesc"></span>
+        </div>
+
+        <!-- Error -->
+        <div class="error-msg" id="errorMsg">
+          <span>⚠️</span>
+          <span id="errorText"></span>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="convertBtn">
+            <span>⚡</span> Convert
+          </button>
+          <button class="btn btn-ghost" id="resetBtn">
+            <span>↺</span> Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULT CARD -->
+      <div class="card result-section" id="resultSection">
+        <div class="result-label">✅ Result</div>
+
+        <!-- Full number display -->
+        <div class="number-display">
+          <div class="number-full" id="numberDisplay"></div>
+          <div class="segment-legend">
+            <div class="seg-tag">
+              <div class="seg-dot branch"></div>
+              Branch (3)
+            </div>
+            <div class="seg-tag">
+              <div class="seg-dot scheme"></div>
+              Scheme (4)
+            </div>
+            <div class="seg-tag">
+              <div class="seg-dot account"></div>
+              Account (8)
+            </div>
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="breakdown" id="breakdown">
+          <div class="breakdown-item branch">
+            <div class="bi-label">Branch Code</div>
+            <div class="bi-val" id="branchVal">—</div>
+            <div class="bi-digits">3 digits</div>
+          </div>
+          <div class="breakdown-item scheme">
+            <div class="bi-label">Scheme Code</div>
+            <div class="bi-val" id="schemeVal">—</div>
+            <div class="bi-digits">4 digits</div>
+          </div>
+          <div class="breakdown-item account">
+            <div class="bi-label">Account No.</div>
+            <div class="bi-val" id="accountVal">—</div>
+            <div class="bi-digits">8 digits</div>
+          </div>
+        </div>
+
+        <!-- Copy -->
+        <button class="copy-btn" id="copyBtn">
+          <span id="copyIcon">📋</span>
+          <span id="copyText">Copy Full Account Number</span>
+        </button>
+      </div>
+
+      <!-- EXAMPLES CARD -->
+      <div class="card examples-section">
+        <div class="history-header">
+          <div class="history-title">Try an Example</div>
+        </div>
+        <div class="examples-grid" id="examplesGrid"></div>
+      </div>
+
+      <!-- HISTORY CARD -->
+      <div class="card history-section">
+        <div class="history-header">
+          <div class="history-title">Recent Lookups</div>
+          <button class="history-clear-btn" id="historyClearBtn">
+            Clear All
+          </button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </main>
+
+    <footer>Built for smart account lookup · Format: BBB·SSSS·AAAAAAAA</footer>
+
+    <script>
+      /* ================================================
+       ACCOUNT NUMBER FINDER — CORE LOGIC
+       ================================================
+       Format: [Branch:3] [Scheme:4] [Account:8] = 15 digits
+
+       Input patterns handled:
+         A) B/S/A       → 21/31/4555
+         B) B/S/A       → 21/1315/4590
+         C) B/S/D/N     → 21/717/2/3455  (divided account)
+         D) B/S/D/N     → 21/365/1/9009
+         E) Raw concat  → 21314555
+    ================================================ */
+
+      /**
+       * Pad a string/number to N digits with leading zeros.
+       */
+      function padLeft(val, length) {
+        return String(val).padStart(length, "0");
+      }
+
+      /**
+       * Parse a raw input string into { branch, scheme, account }.
+       * Returns null if parsing fails.
+       */
+      function parseAccountInput(raw) {
+        if (!raw || !raw.trim()) return null;
+
+        // Remove all whitespace
+        const cleaned = raw.trim().replace(/\s+/g, " ");
+
+        // Split on separators: / - space  (keep numbers only as parts)
+        const parts = cleaned
+          .split(/[\s\/\-]+/)
+          .filter((p) => p !== "" && /^\d+$/.test(p));
+
+        if (parts.length === 0) return null;
+
+        // Validate: each part must be numeric
+        for (const p of parts) {
+          if (!/^\d+$/.test(p)) return null;
+        }
+
+        let branch, scheme, acctRaw, subPart, mainPart;
+        let detectedType = "";
+
+        if (parts.length === 1) {
+          // Single block: try to decode as concatenated 15-digit or raw account
+          const total = parts[0];
+          if (total.length === 15) {
+            // Already full 15-digit
+            branch = total.substring(0, 3);
+            scheme = total.substring(3, 7);
+            acctRaw = total.substring(7, 15);
+            detectedType = "15-digit full number";
+          } else if (total.length >= 3) {
+            // Try to extract branch(≤3) + scheme(≤4) + account from concat
+            // Heuristic: first 1–3 digits = branch, next 2–4 = scheme, rest = account
+            // We try to detect based on known digit lengths
+            const len = total.length;
+            if (len <= 8) {
+              // Treat as account number only (no branch/scheme info — ambiguous)
+              // Return error: not enough info
+              return null;
+            }
+            // len 9–15: try decomposing
+            // branch: up to 3 digits; scheme: up to 4; account: remainder
+            // We'll assume branch is 2 digits, scheme is 2 digits → account = rest
+            // But this is ambiguous without separators for short concat
+            return null;
+          } else {
+            return null;
+          }
+        } else if (parts.length === 2) {
+          // Could be B/A or B+S concatenated / A — ambiguous
+          // Treat as: part[0] = branch, part[1] = account (no scheme → error? or pad scheme to 0000?)
+          // Per spec, we need at least branch + scheme + account
+          // But handle gracefully: treat part[1] as combined scheme+account if long enough
+          const [p0, p1] = parts;
+          if (p1.length >= 6) {
+            // p0 = branch, p1 = scheme(first 4) + account(rest)
+            branch = p0;
+            scheme = p1.substring(0, 4);
+            acctRaw = p1.substring(4);
+            detectedType = `${p0}/${p1} (split auto)`;
+          } else {
+            // p0 = branch, p1 = scheme, account = "0" (missing — use 00000000)
+            branch = p0;
+            scheme = p1;
+            acctRaw = "0";
+            detectedType = `${p0}/${p1} (no account)`;
+          }
+        } else if (parts.length === 3) {
+          // B / S / A  — standard 3-part
+          [branch, scheme, acctRaw] = parts;
+          detectedType = `${parts[0]}/${parts[1]}/${parts[2]}`;
+        } else if (parts.length === 4) {
+          // B / S / D / N  — divided account
+          [branch, scheme, subPart, mainPart] = parts;
+          // Account = subPart padded to 2 + mainPart padded to 6
+          const sub2 = padLeft(subPart, 2);
+          const main6 = padLeft(mainPart, 6);
+          acctRaw = sub2 + main6; // already 8 digits
+          detectedType = `${parts[0]}/${parts[1]}/${parts[2]}/${parts[3]} (divided)`;
+        } else if (parts.length > 4) {
+          return null; // Too many parts — invalid
+        }
+
+        // Normalize each segment
+        const branchNorm = padLeft(branch, 3);
+        const schemeNorm = padLeft(scheme, 4);
+        let accountNorm;
+
+        if (subPart !== undefined) {
+          // Already composed as 8-digit in acctRaw
+          accountNorm = acctRaw; // already 8 chars
+        } else {
+          accountNorm = padLeft(acctRaw, 8);
+        }
+
+        // Validate lengths
+        if (branchNorm.length !== 3) return null;
+        if (schemeNorm.length !== 4) return null;
+        if (accountNorm.length !== 8) return null;
+
+        const full = branchNorm + schemeNorm + accountNorm;
+        if (full.length !== 15) return null;
+
+        return {
+          full,
+          branch: branchNorm,
+          scheme: schemeNorm,
+          account: accountNorm,
+          detectedType,
+          subPart: subPart !== undefined ? padLeft(subPart, 2) : null,
+          mainPart: mainPart !== undefined ? padLeft(mainPart, 6) : null,
+        };
+      }
+
+      /* ================================================
+       UI LOGIC
+    ================================================ */
+
+      const inputEl = document.getElementById("accountInput");
+      const clearBtn = document.getElementById("clearBtn");
+      const convertBtn = document.getElementById("convertBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const errorMsg = document.getElementById("errorMsg");
+      const errorText = document.getElementById("errorText");
+      const resultSection = document.getElementById("resultSection");
+      const numberDisplay = document.getElementById("numberDisplay");
+      const branchVal = document.getElementById("branchVal");
+      const schemeVal = document.getElementById("schemeVal");
+      const accountVal = document.getElementById("accountVal");
+      const copyBtn = document.getElementById("copyBtn");
+      const copyIcon = document.getElementById("copyIcon");
+      const copyText = document.getElementById("copyText");
+      const historyList = document.getElementById("historyList");
+      const historyClearBtn = document.getElementById("historyClearBtn");
+      const detectedFormat = document.getElementById("detectedFormat");
+      const detectedTag = document.getElementById("detectedTag");
+      const detectedDesc = document.getElementById("detectedDesc");
+      const digitCount = document.getElementById("digitCount");
+
+      let currentResult = null;
+
+      /* ---- EXAMPLES ---- */
+      const EXAMPLES = [
+        { input: "21/31/4555", label: "B/S/A simple" },
+        { input: "21/717/2/3455", label: "B/S/D/N divided" },
+        { input: "21/365/1/9009", label: "B/S/D/N divided" },
+        { input: "21/1315/4590", label: "B/S/A (4-dig scheme)" },
+        { input: "21-31-4555", label: "Dash separator" },
+        { input: "21 31 4555", label: "Space separator" },
+      ];
+
+      function buildExamples() {
+        const grid = document.getElementById("examplesGrid");
+        grid.innerHTML = "";
+        EXAMPLES.forEach((ex) => {
+          const result = parseAccountInput(ex.input);
+          const div = document.createElement("div");
+          div.className = "example-item";
+          div.innerHTML = `
+          <div class="ex-input">${ex.input}</div>
+          <div class="ex-output">${result ? result.full : "—"}
+            <span class="ex-arrow">← </span><span style="color:var(--text-muted);font-size:0.68rem;">${ex.label}</span>
+          </div>
+        `;
+          div.addEventListener("click", () => {
+            inputEl.value = ex.input;
+            handleInput();
+            doConvert();
+          });
+          grid.appendChild(div);
+        });
+      }
+
+      /* ---- HISTORY ---- */
+      const MAX_HISTORY = 5;
+      const STORAGE_KEY = "acctfinder_history";
+
+      function loadHistory() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        } catch {
+          return [];
+        }
+      }
+
+      function saveHistory(list) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        } catch {}
+      }
+
+      function addToHistory(inputVal, result) {
+        let history = loadHistory();
+        // Remove duplicate input
+        history = history.filter((h) => h.input !== inputVal);
+        history.unshift({ input: inputVal, output: result.full });
+        history = history.slice(0, MAX_HISTORY);
+        saveHistory(history);
+        renderHistory();
+      }
+
+      function renderHistory() {
+        const history = loadHistory();
+        historyList.innerHTML = "";
+        if (history.length === 0) {
+          historyList.innerHTML =
+            '<div class="empty-history">No recent lookups yet.</div>';
+          return;
+        }
+        history.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "history-item";
+          div.innerHTML = `
+          <span class="history-input">${item.input}</span>
+          <span class="history-arrow">→</span>
+          <span class="history-output">${item.output}</span>
+        `;
+          div.addEventListener("click", () => {
+            inputEl.value = item.input;
+            handleInput();
+            doConvert();
+          });
+          historyList.appendChild(div);
+        });
+      }
+
+      historyClearBtn.addEventListener("click", () => {
+        saveHistory([]);
+        renderHistory();
+      });
+
+      /* ---- INPUT HANDLING ---- */
+      function handleInput() {
+        const val = inputEl.value.trim();
+        clearBtn.style.display = val ? "block" : "none";
+
+        // Count raw digits
+        const digits = val.replace(/\D/g, "");
+        digitCount.textContent = digits.length ? `${digits.length}d` : "";
+
+        // Live detect
+        if (val) {
+          const result = parseAccountInput(val);
+          if (result) {
+            detectedTag.textContent = result.detectedType;
+            detectedDesc.textContent = result.subPart
+              ? `÷ sub:${result.subPart} + main:${result.mainPart}`
+              : "";
+            detectedFormat.classList.add("visible");
+            inputEl.classList.remove("has-error");
+            inputEl.classList.add("has-success");
+          } else {
+            detectedFormat.classList.remove("visible");
+            inputEl.classList.remove("has-success");
+          }
+        } else {
+          detectedFormat.classList.remove("visible");
+          inputEl.classList.remove("has-success", "has-error");
+          hideError();
+          hideResult();
+        }
+      }
+
+      function showError(msg) {
+        errorText.textContent = msg;
+        errorMsg.classList.add("visible");
+        inputEl.classList.add("has-error");
+        inputEl.classList.remove("has-success");
+      }
+
+      function hideError() {
+        errorMsg.classList.remove("visible");
+        inputEl.classList.remove("has-error");
+      }
+
+      function hideResult() {
+        resultSection.classList.remove("visible");
+        currentResult = null;
+      }
+
+      function showResult(result) {
+        currentResult = result;
+
+        // Build colored number
+        numberDisplay.innerHTML =
+          `<span class="seg seg-branch">${result.branch}</span>` +
+          `<span class="seg-divider">·</span>` +
+          `<span class="seg seg-scheme">${result.scheme}</span>` +
+          `<span class="seg-divider">·</span>` +
+          `<span class="seg seg-account">${result.account}</span>`;
+
+        branchVal.textContent = result.branch;
+        schemeVal.textContent = result.scheme;
+        accountVal.textContent = result.account;
+
+        resultSection.classList.add("visible");
+
+        // Scroll into view
+        setTimeout(
+          () =>
+            resultSection.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+            }),
+          100,
+        );
+      }
+
+      function doConvert() {
+        const val = inputEl.value.trim();
+        if (!val) {
+          showError("Please enter an account number to convert.");
+          return;
+        }
+
+        // Check for non-numeric non-separator characters
+        if (/[a-zA-Z]/.test(val)) {
+          showError(
+            "Account number should only contain digits and separators (/ - space).",
+          );
+          return;
+        }
+
+        const result = parseAccountInput(val);
+        if (!result) {
+          showError(
+            "Could not parse this input. Please use formats like: 21/31/4555 · 21/717/2/3455 · 21-31-4555",
+          );
+          hideResult();
+          return;
+        }
+
+        hideError();
+        showResult(result);
+        addToHistory(val, result);
+
+        // Reset copy button
+        copyBtn.classList.remove("copied");
+        copyIcon.textContent = "📋";
+        copyText.textContent = "Copy Full Account Number";
+      }
+
+      /* ---- BUTTON EVENTS ---- */
+      convertBtn.addEventListener("click", doConvert);
+
+      inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doConvert();
+      });
+
+      inputEl.addEventListener("input", handleInput);
+
+      clearBtn.addEventListener("click", () => {
+        inputEl.value = "";
+        inputEl.focus();
+        handleInput();
+        hideError();
+        hideResult();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        inputEl.value = "";
+        inputEl.focus();
+        handleInput();
+        hideError();
+        hideResult();
+      });
+
+      /* ---- COPY ---- */
+      copyBtn.addEventListener("click", () => {
+        if (!currentResult) return;
+        const text = currentResult.full;
+        if (navigator.clipboard) {
+          navigator.clipboard
+            .writeText(text)
+            .then(onCopied)
+            .catch(() => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function onCopied() {
+        copyBtn.classList.add("copied");
+        copyIcon.textContent = "✅";
+        copyText.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.classList.remove("copied");
+          copyIcon.textContent = "📋";
+          copyText.textContent = "Copy Full Account Number";
+        }, 2000);
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          onCopied();
+        } catch {}
+        document.body.removeChild(ta);
+      }
+
+      /* ---- DARK MODE ---- */
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeLabel = document.getElementById("themeLabel");
+
+      function applyTheme(dark) {
+        document.documentElement.setAttribute(
+          "data-theme",
+          dark ? "dark" : "light",
+        );
+        themeIcon.textContent = dark ? "☀️" : "🌙";
+        themeLabel.textContent = dark ? "Light" : "Dark";
+        try {
+          localStorage.setItem("acctfinder_theme", dark ? "dark" : "light");
+        } catch {}
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const isDark =
+          document.documentElement.getAttribute("data-theme") === "dark";
+        applyTheme(!isDark);
+      });
+
+      // Load saved theme
+      try {
+        const saved = localStorage.getItem("acctfinder_theme");
+        if (saved === "dark") applyTheme(true);
+      } catch {}
+
+      /* ---- INIT ---- */
+      buildExamples();
+      renderHistory();
+      inputEl.focus();
+    </script>
+  </body>
+</html>

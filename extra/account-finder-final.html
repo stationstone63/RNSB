@@ -1,0 +1,1812 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AcctFind — Smart Account Number Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+      :root {
+        --bg: #f0f3f9;
+        --bg2: #e8ecf4;
+        --surface: #ffffff;
+        --surface2: #f7f9fc;
+        --surface3: #eef1f7;
+        --border: #dde2ee;
+        --border2: #c8d0e4;
+        --text1: #0b1228;
+        --text2: #3d4f70;
+        --text3: #7a8baa;
+        --text4: #b0bcd4;
+        --accent: #1a56e8;
+        --accent-dim: #e7eeff;
+        --accent-glow: rgba(26, 86, 232, 0.15);
+        --accent-dark: #1040c0;
+        --branch-c: #1a56e8;
+        --branch-bg: #e7eeff;
+        --scheme-c: #7c3aed;
+        --scheme-bg: #f0ebff;
+        --acct-c: #059669;
+        --acct-bg: #e6f7f1;
+        --err-c: #dc2626;
+        --err-bg: #fff0f0;
+        --warn-c: #d97706;
+        --warn-bg: #fffbeb;
+        --shadow-xs: 0 1px 2px rgba(11, 18, 40, 0.06);
+        --shadow-sm: 0 2px 8px rgba(11, 18, 40, 0.08);
+        --shadow-md: 0 4px 20px rgba(11, 18, 40, 0.1);
+        --shadow-lg: 0 8px 40px rgba(11, 18, 40, 0.12);
+        --radius-sm: 8px;
+        --radius: 14px;
+        --radius-lg: 20px;
+        --radius-pill: 999px;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --t: 0.2s;
+      }
+      [data-theme="dark"] {
+        --bg: #080d1c;
+        --surface: #111827;
+        --surface2: #1a2438;
+        --surface3: #222f48;
+        --border: #2a3a58;
+        --border2: #364766;
+        --text1: #e8edf8;
+        --text2: #9aabcc;
+        --text3: #5a6e94;
+        --text4: #364766;
+        --accent: #4f7ef8;
+        --accent-dim: #151e38;
+        --accent-glow: rgba(79, 126, 248, 0.18);
+        --accent-dark: #6b94f8;
+        --branch-c: #5b8df8;
+        --branch-bg: #141e38;
+        --scheme-c: #a78bfa;
+        --scheme-bg: #1c1438;
+        --acct-c: #34d399;
+        --acct-bg: #0d2420;
+        --err-c: #f87171;
+        --err-bg: #1c0f0f;
+        --warn-c: #fbbf24;
+        --warn-bg: #1c1800;
+        --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+        --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      /* ═══════════════════════════════════════════ RESET */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Instrument Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text1);
+        min-height: 100vh;
+        line-height: 1.5;
+        transition:
+          background var(--t) var(--ease),
+          color var(--t) var(--ease);
+        -webkit-font-smoothing: antialiased;
+      }
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+      }
+      input {
+        font-family: inherit;
+        border: none;
+        outline: none;
+        background: none;
+      }
+      ::selection {
+        background: var(--accent);
+        color: #fff;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+        border-radius: 99px;
+      }
+
+      /* BG GLOW */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            ellipse 80% 50% at 20% -10%,
+            rgba(26, 86, 232, 0.06),
+            transparent
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 80% 110%,
+            rgba(124, 58, 237, 0.05),
+            transparent
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ═══════════════════════════════════════════ LAYOUT */
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 16px 80px;
+      }
+
+      /* ═══════════════════════════════════════════ TOPBAR */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0 10px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--accent), var(--scheme-c));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(26, 86, 232, 0.3);
+        flex-shrink: 0;
+      }
+      .brand-mark svg {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+      }
+      .brand-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: -0.02em;
+        color: var(--text1);
+      }
+      .brand-name em {
+        color: var(--accent);
+        font-style: normal;
+      }
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: var(--radius-pill);
+        background: var(--acct-bg);
+        color: var(--acct-c);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        border: 1px solid rgba(5, 150, 105, 0.3);
+      }
+      .live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--acct-c);
+        animation: blink 1.6s ease infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .theme-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        transition:
+          border-color var(--t),
+          box-shadow var(--t);
+        box-shadow: var(--shadow-xs);
+      }
+      .theme-btn:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+      }
+
+      /* ═══════════════════════════════════════════ HERO */
+      .hero {
+        padding: 20px 0 24px;
+        text-align: center;
+      }
+      .hero-eyebrow {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 12px;
+      }
+      .hero-title {
+        font-size: clamp(1.7rem, 5.5vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1.15;
+        color: var(--text1);
+        margin-bottom: 10px;
+      }
+      .hero-title span {
+        background: linear-gradient(135deg, var(--accent), var(--scheme-c));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-sub {
+        font-size: 0.9rem;
+        color: var(--text2);
+        font-weight: 400;
+        line-height: 1.7;
+        max-width: 420px;
+        margin: 0 auto 16px;
+      }
+      .format-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+      }
+      .format-pill {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        padding: 3px 10px;
+        border-radius: var(--radius-pill);
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        color: var(--text3);
+      }
+
+      /* ═══════════════════════════════════════════ STRUCT BAR */
+      .struct-bar {
+        display: flex;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        border: 1.5px solid var(--border);
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-xs);
+      }
+      .struct-seg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-align: center;
+        flex: 1;
+      }
+      .struct-seg.branch {
+        background: var(--branch-bg);
+        color: var(--branch-c);
+      }
+      .struct-seg.scheme {
+        background: var(--scheme-bg);
+        color: var(--scheme-c);
+      }
+      .struct-seg.acct {
+        background: var(--acct-bg);
+        color: var(--acct-c);
+        flex: 2;
+      }
+      .struct-val {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        font-weight: 500;
+        opacity: 0.7;
+        margin-top: 2px;
+      }
+
+      /* ═══════════════════════════════════════════ SEARCH CARD */
+      .search-card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 16px;
+      }
+      .searchbar {
+        position: relative;
+        border: 2px solid var(--border);
+        border-radius: var(--radius-pill);
+        background: var(--surface2);
+        display: flex;
+        align-items: center;
+        transition:
+          border-color var(--t),
+          box-shadow var(--t),
+          background var(--t);
+        overflow: hidden;
+      }
+      .searchbar:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px var(--accent-glow);
+        background: var(--surface);
+      }
+      .searchbar.has-error {
+        border-color: var(--err-c);
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+      }
+      .searchbar.has-ok {
+        border-color: var(--acct-c);
+        box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+      }
+
+      .search-icon {
+        flex-shrink: 0;
+        padding: 0 14px 0 18px;
+        color: var(--text3);
+        display: flex;
+        align-items: center;
+        transition: color var(--t);
+      }
+      .searchbar:focus-within .search-icon {
+        color: var(--accent);
+      }
+      .search-icon svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      #acctInput {
+        flex: 1;
+        padding: 16px 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: var(--text1);
+        background: transparent;
+        letter-spacing: 0.04em;
+      }
+      #acctInput::placeholder {
+        font-family: "Instrument Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--text4);
+        letter-spacing: 0;
+      }
+      .search-right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 10px;
+        flex-shrink: 0;
+      }
+      .digit-badge {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: var(--radius-pill);
+        background: var(--surface3);
+        color: var(--text3);
+        border: 1px solid var(--border);
+        display: none;
+      }
+      .digit-badge.show {
+        display: block;
+      }
+      .clear-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface3);
+        color: var(--text3);
+        font-size: 0.85rem;
+        line-height: 1;
+        border: 1px solid var(--border);
+        transition:
+          background var(--t),
+          color var(--t),
+          border-color var(--t);
+      }
+      .clear-btn.show {
+        display: flex;
+      }
+      .clear-btn:hover {
+        background: var(--err-bg);
+        color: var(--err-c);
+        border-color: var(--err-c);
+      }
+
+      /* detect row */
+      .detect-row {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 10px 14px;
+        background: var(--surface3);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        animation: fadeSlide 0.2s var(--ease);
+      }
+      .detect-row.show {
+        display: flex;
+      }
+      .detect-icon {
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+      .detect-text {
+        font-size: 0.78rem;
+        color: var(--text2);
+        flex: 1;
+      }
+      .detect-tag {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 2px 9px;
+        border-radius: var(--radius-pill);
+        background: var(--accent-dim);
+        color: var(--accent);
+        border: 1px solid rgba(26, 86, 232, 0.3);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      /* error row */
+      .error-row {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: var(--err-bg);
+        border-radius: var(--radius-sm);
+        border: 1.5px solid rgba(220, 38, 38, 0.4);
+        color: var(--err-c);
+        font-size: 0.82rem;
+        font-weight: 500;
+        animation: fadeSlide 0.2s var(--ease);
+      }
+      .error-row.show {
+        display: flex;
+      }
+
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* btn row */
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .btn-convert {
+        flex: 1;
+        padding: 13px 20px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: #fff;
+        border-radius: var(--radius-pill);
+        font-size: 0.88rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        box-shadow: 0 3px 14px rgba(26, 86, 232, 0.35);
+        transition:
+          transform var(--t),
+          box-shadow var(--t);
+      }
+      .btn-convert:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 22px rgba(26, 86, 232, 0.45);
+      }
+      .btn-convert:active {
+        transform: translateY(0);
+      }
+      .btn-reset {
+        padding: 13px 18px;
+        background: var(--surface2);
+        color: var(--text2);
+        border-radius: var(--radius-pill);
+        font-size: 0.88rem;
+        font-weight: 600;
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all var(--t);
+      }
+      .btn-reset:hover {
+        background: var(--err-bg);
+        color: var(--err-c);
+        border-color: var(--err-c);
+      }
+
+      /* ═══════════════════════════════════════════ RESULT CARD */
+      .result-card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 16px;
+        display: none;
+        animation: fadeSlide 0.3s var(--ease);
+      }
+      .result-card.show {
+        display: block;
+      }
+
+      .result-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+      .result-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--text3);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .result-label::before {
+        content: "";
+        width: 3px;
+        height: 14px;
+        border-radius: 2px;
+        background: linear-gradient(to bottom, var(--acct-c), var(--accent));
+      }
+      .ok-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: var(--radius-pill);
+        background: var(--acct-bg);
+        color: var(--acct-c);
+        font-size: 0.7rem;
+        font-weight: 600;
+        border: 1px solid rgba(5, 150, 105, 0.35);
+      }
+
+      /* num display */
+      .num-display {
+        background: linear-gradient(135deg, var(--surface2), var(--surface3));
+        border: 2px solid var(--acct-c);
+        border-radius: var(--radius);
+        padding: 20px 20px 16px;
+        margin-bottom: 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .num-display::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 86, 232, 0.03),
+          rgba(5, 150, 105, 0.04)
+        );
+        pointer-events: none;
+      }
+      .num-full {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .ns-branch {
+        color: var(--branch-c);
+      }
+      .ns-scheme {
+        color: var(--scheme-c);
+      }
+      .ns-acct {
+        color: var(--acct-c);
+      }
+      .ns-dot {
+        color: var(--text4);
+        font-size: 0.75em;
+        margin: 0 4px;
+        align-self: center;
+      }
+      .seg-legend {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .seg-l {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--text3);
+      }
+      .seg-dot-c {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* breakdown */
+      .breakdown {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      @media (max-width: 400px) {
+        .breakdown {
+          grid-template-columns: 1fr;
+        }
+        .bk-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-align: left;
+          padding: 10px 14px;
+        }
+        .bk-lbl {
+          margin-bottom: 0;
+          min-width: 70px;
+        }
+        .bk-digits {
+          margin-top: 0;
+          margin-left: auto;
+        }
+      }
+      .bk-item {
+        border-radius: var(--radius-sm);
+        padding: 12px 10px;
+        text-align: center;
+        border: 1.5px solid transparent;
+        transition: transform var(--t);
+      }
+      .bk-item:hover {
+        transform: translateY(-2px);
+      }
+      .bk-item.branch {
+        background: var(--branch-bg);
+        border-color: rgba(26, 86, 232, 0.2);
+      }
+      .bk-item.scheme {
+        background: var(--scheme-bg);
+        border-color: rgba(124, 58, 237, 0.2);
+      }
+      .bk-item.acct {
+        background: var(--acct-bg);
+        border-color: rgba(5, 150, 105, 0.2);
+      }
+      .bk-lbl {
+        font-size: 0.63rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+      }
+      .bk-item.branch .bk-lbl {
+        color: var(--branch-c);
+      }
+      .bk-item.scheme .bk-lbl {
+        color: var(--scheme-c);
+      }
+      .bk-item.acct .bk-lbl {
+        color: var(--acct-c);
+      }
+      .bk-val {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+      .bk-item.branch .bk-val {
+        color: var(--branch-c);
+      }
+      .bk-item.scheme .bk-val {
+        color: var(--scheme-c);
+      }
+      .bk-item.acct .bk-val {
+        color: var(--acct-c);
+      }
+      .bk-digits {
+        font-size: 0.62rem;
+        color: var(--text3);
+        margin-top: 3px;
+      }
+
+      /* divided note */
+      .divided-note {
+        display: none;
+        padding: 9px 13px;
+        background: var(--warn-bg);
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(217, 119, 6, 0.35);
+        font-size: 0.78rem;
+        color: var(--warn-c);
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+      .divided-note.show {
+        display: block;
+      }
+
+      /* copy button */
+      .copy-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: var(--radius-pill);
+        background: var(--accent-dim);
+        color: var(--accent);
+        border: 1.5px solid rgba(26, 86, 232, 0.35);
+        font-size: 0.86rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        transition: all var(--t);
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 3px 14px rgba(26, 86, 232, 0.3);
+      }
+      .copy-btn.copied {
+        background: var(--acct-bg);
+        color: var(--acct-c);
+        border-color: var(--acct-c);
+      }
+
+      /* ═══════════════════════════════════════════ HISTORY CARD */
+      .history-card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 16px;
+      }
+      .history-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .history-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text2);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .history-title::before {
+        content: "";
+        width: 3px;
+        height: 14px;
+        border-radius: 2px;
+        background: var(--scheme-c);
+      }
+      .hist-count {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: var(--radius-pill);
+        background: var(--scheme-bg);
+        color: var(--scheme-c);
+      }
+      .hclear-btn {
+        font-size: 0.73rem;
+        font-weight: 600;
+        color: var(--text3);
+        padding: 4px 10px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--border);
+        background: var(--surface3);
+        transition: all var(--t);
+      }
+      .hclear-btn:hover {
+        color: var(--err-c);
+        border-color: var(--err-c);
+        background: var(--err-bg);
+      }
+      .history-body {
+        padding: 8px 12px 4px;
+      }
+      .history-empty {
+        padding: 28px;
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text4);
+      }
+      .history-empty span {
+        display: block;
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+      }
+      .h-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 8px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition:
+          background var(--t),
+          transform var(--t);
+        border-bottom: 1px solid var(--border);
+      }
+      .h-item:last-child {
+        border-bottom: none;
+      }
+      .h-item:hover {
+        background: var(--surface2);
+        transform: translateX(3px);
+      }
+      .h-input {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--text2);
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .h-arrow {
+        color: var(--text4);
+        font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+      .h-output {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--acct-c);
+        flex-shrink: 0;
+      }
+      .h-reuse {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--accent-dim);
+        color: var(--accent);
+        font-size: 0.7rem;
+        transition: all var(--t);
+      }
+      .h-item:hover .h-reuse {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .history-footer {
+        padding: 10px 20px 16px;
+        display: flex;
+        justify-content: center;
+      }
+      .show-all-btn {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent);
+        padding: 7px 20px;
+        border-radius: var(--radius-pill);
+        border: 1.5px solid rgba(26, 86, 232, 0.35);
+        background: var(--accent-dim);
+        transition: all var(--t);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .show-all-btn:hover {
+        background: var(--accent);
+        color: #fff;
+      }
+      .chevron {
+        transition: transform var(--t);
+        display: inline-block;
+        font-style: normal;
+      }
+      .show-all-btn.expanded .chevron {
+        transform: rotate(180deg);
+      }
+      .history-all {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s var(--ease);
+      }
+      .history-all.open {
+        max-height: 600px;
+        border-top: 1px solid var(--border);
+      }
+      .history-all .history-body {
+        padding: 6px 12px 8px;
+      }
+
+      /* ═══════════════════════════════════════════ EXAMPLES */
+      .examples-card {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 20px 20px 16px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 16px;
+      }
+      .ex-head {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: var(--text3);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .ex-head::before {
+        content: "";
+        width: 3px;
+        height: 14px;
+        border-radius: 2px;
+        background: var(--branch-c);
+      }
+      .ex-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      @media (max-width: 380px) {
+        .ex-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .ex-item {
+        padding: 10px 12px;
+        background: var(--surface2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--t);
+      }
+      .ex-item:hover {
+        border-color: var(--accent);
+        background: var(--accent-dim);
+        transform: translateY(-1px);
+      }
+      .ex-inp {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.79rem;
+        color: var(--text2);
+        margin-bottom: 3px;
+      }
+      .ex-out {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--acct-c);
+      }
+      .ex-lbl {
+        font-size: 0.62rem;
+        color: var(--text4);
+        margin-top: 3px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 0.72rem;
+        color: var(--text4);
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v2h16V6H4zm0 4v8h16v-8H4zm2 2h4v2H6v-2zm6 0h6v2h-6v-2z"
+              />
+            </svg>
+          </div>
+          <span class="brand-name">Acct<em>Find</em></span>
+        </div>
+        <div class="topbar-right">
+          <div class="live-badge">
+            <div class="live-dot"></div>
+            LIVE
+          </div>
+          <button class="theme-btn" id="themeBtn" title="Toggle dark mode">
+            🌙
+          </button>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-eyebrow">Smart Account Lookup</div>
+        <h1 class="hero-title">
+          Any Format →<br /><span>15-Digit Precision</span>
+        </h1>
+        <p class="hero-sub">
+          Type in any account format — dashes, slashes, raw digits, divided
+          notation — get the correct structured number instantly.
+        </p>
+        <div class="format-pills">
+          <span class="format-pill">21/31/4555</span>
+          <span class="format-pill">21-717-2-3455</span>
+          <span class="format-pill">021071702003455</span>
+          <span class="format-pill">2171724500</span>
+        </div>
+      </div>
+
+      <!-- FORMAT DIAGRAM -->
+      <div class="struct-bar">
+        <div class="struct-seg branch">
+          Branch<span class="struct-val">3 digits</span>
+        </div>
+        <div class="struct-seg scheme">
+          Scheme<span class="struct-val">4 digits</span>
+        </div>
+        <div class="struct-seg acct">
+          Account Number<span class="struct-val">8 digits</span>
+        </div>
+      </div>
+
+      <!-- SEARCH CARD -->
+      <div class="search-card">
+        <div class="searchbar" id="searchbar">
+          <div class="search-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            id="acctInput"
+            placeholder="Enter account number (any format)…"
+            autocomplete="off"
+            spellcheck="false"
+            inputmode="text"
+          />
+          <div class="search-right">
+            <span class="digit-badge" id="digitBadge"></span>
+            <button class="clear-btn" id="clearBtn" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <div class="detect-row" id="detectRow">
+          <span class="detect-icon" id="detectIcon">🔍</span>
+          <span class="detect-text" id="detectText"></span>
+          <span class="detect-tag" id="detectTag"></span>
+        </div>
+
+        <div class="error-row" id="errorRow">
+          <span>⚠️</span><span id="errorText"></span>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-convert" id="convertBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9z" />
+            </svg>
+            Convert
+          </button>
+          <button class="btn-reset" id="resetBtn">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- RESULT CARD -->
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <div class="result-label">Structured Output</div>
+          <div class="ok-badge">✓ 15 digits</div>
+        </div>
+
+        <div class="num-display">
+          <div class="num-full" id="numFull"></div>
+          <div class="seg-legend">
+            <div class="seg-l">
+              <div class="seg-dot-c" style="background: var(--branch-c)"></div>
+              Branch (3)
+            </div>
+            <div class="seg-l">
+              <div class="seg-dot-c" style="background: var(--scheme-c)"></div>
+              Scheme (4)
+            </div>
+            <div class="seg-l">
+              <div class="seg-dot-c" style="background: var(--acct-c)"></div>
+              Account (8)
+            </div>
+          </div>
+        </div>
+
+        <div class="divided-note" id="dividedNote"></div>
+
+        <div class="breakdown">
+          <div class="bk-item branch">
+            <div class="bk-lbl">Branch</div>
+            <div class="bk-val" id="bkBranch">—</div>
+            <div class="bk-digits">3 digits</div>
+          </div>
+          <div class="bk-item scheme">
+            <div class="bk-lbl">Scheme</div>
+            <div class="bk-val" id="bkScheme">—</div>
+            <div class="bk-digits">4 digits</div>
+          </div>
+          <div class="bk-item acct">
+            <div class="bk-lbl">Account</div>
+            <div class="bk-val" id="bkAcct">—</div>
+            <div class="bk-digits">8 digits</div>
+          </div>
+        </div>
+
+        <button class="copy-btn" id="copyBtn">
+          <span id="copyIcon">📋</span>
+          <span id="copyLabel">Copy Full Account Number</span>
+        </button>
+      </div>
+
+      <!-- HISTORY CARD -->
+      <div class="history-card">
+        <div class="history-head">
+          <div class="history-title">
+            Recent Lookups
+            <span class="hist-count" id="histCount">0</span>
+          </div>
+          <button class="hclear-btn" id="hclearBtn">Clear</button>
+        </div>
+        <div class="history-body" id="histBody"></div>
+        <div class="history-footer" id="histFooter" style="display: none">
+          <button class="show-all-btn" id="showAllBtn">
+            <span>View All History</span><em class="chevron">▾</em>
+          </button>
+        </div>
+        <div class="history-all" id="histAll">
+          <div class="history-body" id="histAllBody"></div>
+        </div>
+      </div>
+
+      <!-- EXAMPLES -->
+      <div class="examples-card">
+        <div class="ex-head">Try an Example</div>
+        <div class="ex-grid" id="exGrid"></div>
+      </div>
+    </div>
+    <footer>
+      AcctFind · Smart Account Number Finder · Format: Branch(3) · Scheme(4) ·
+      Account(8) = 15 digits
+    </footer>
+
+    <script>
+      /* ═══════════════════════════════════════════
+   PARSING ENGINE
+   ─────────────────────────────────────────
+   Supported cases:
+   A  15 digits  → already full, segment only
+   B  8–14 raw   → first3+next4+rest (pad to 8)
+   C  3 parts    → branch / scheme / account
+   D  4 parts    → branch / scheme / sub(2) / main(6)
+═══════════════════════════════════════════ */
+      function pad(v, n) {
+        return String(v).padStart(n, "0");
+      }
+
+      function parse(raw) {
+        if (!raw || !raw.trim()) return null;
+        if (/[a-zA-Z]/.test(raw))
+          return {
+            error: "Only digits and separators (/ - space) are allowed.",
+          };
+
+        const parts = raw
+          .trim()
+          .split(/[\s/\-]+/)
+          .filter((p) => /^\d+$/.test(p) && p.length > 0);
+        if (!parts.length) return { error: "No numeric parts found." };
+
+        /* ── 1 part ── */
+        if (parts.length === 1) {
+          const d = parts[0];
+          if (d.length === 15) {
+            // CASE A
+            return {
+              branch: d.slice(0, 3),
+              scheme: d.slice(3, 7),
+              account: d.slice(7, 15),
+              type: "15-Digit Full Number",
+              typeKey: "full",
+              full: d,
+            };
+          }
+          if (d.length >= 8 && d.length <= 14) {
+            // CASE B — smart split
+            const branch = pad(d.slice(0, 3), 3);
+            const scheme = pad(d.slice(3, 7), 4);
+            const acctRaw = d.slice(7);
+            if (acctRaw.length > 8)
+              return {
+                error: `Account part has ${acctRaw.length} digits after split (max 8). Check input.`,
+              };
+            const account = pad(acctRaw, 8);
+            const full = branch + scheme + account;
+            return {
+              branch,
+              scheme,
+              account,
+              type: "Raw Concatenated",
+              typeKey: "raw",
+              full,
+            };
+          }
+          if (d.length < 8)
+            return {
+              error: `Only ${d.length} raw digits. Need at least 8, or use separators.`,
+            };
+          if (d.length > 15)
+            return { error: `${d.length} digits is too long. Maximum is 15.` };
+        }
+
+        /* ── 2 parts ── */
+        if (parts.length === 2) {
+          const [p0, p1] = parts;
+          if (p1.length >= 6) {
+            const branch = pad(p0, 3);
+            const scheme = pad(p1.slice(0, 4), 4);
+            const acctRaw = p1.slice(4);
+            if (acctRaw.length > 8)
+              return { error: "Account part too long in 2-part input." };
+            const account = pad(acctRaw, 8);
+            const full = branch + scheme + account;
+            if (full.length !== 15)
+              return {
+                error: "Could not form 15-digit number from 2-part input.",
+              };
+            return {
+              branch,
+              scheme,
+              account,
+              type: "Two-Part Auto-Split",
+              typeKey: "two",
+              full,
+            };
+          }
+          return {
+            error:
+              "Two-part input ambiguous. Use: branch/scheme/account format.",
+          };
+        }
+
+        /* ── 3 parts ── */
+        if (parts.length === 3) {
+          const [b, s, a] = parts;
+          if (b.length > 3)
+            return { error: `Branch "${b}" is ${b.length} digits (max 3).` };
+          if (s.length > 4)
+            return { error: `Scheme "${s}" is ${s.length} digits (max 4).` };
+          if (a.length > 8)
+            return { error: `Account "${a}" is ${a.length} digits (max 8).` };
+          const branch = pad(b, 3),
+            scheme = pad(s, 4),
+            account = pad(a, 8);
+          const full = branch + scheme + account;
+          if (full.length !== 15)
+            return { error: "Could not form 15-digit number." };
+          return {
+            branch,
+            scheme,
+            account,
+            type: "Standard (B/S/A)",
+            typeKey: "standard",
+            full,
+          };
+        }
+
+        /* ── 4 parts ── */
+        if (parts.length === 4) {
+          const [b, s, sub, main] = parts;
+          if (b.length > 3) return { error: `Branch "${b}" too long (max 3).` };
+          if (s.length > 4) return { error: `Scheme "${s}" too long (max 4).` };
+          if (sub.length > 2)
+            return { error: `Division "${sub}" too long (max 2 digits).` };
+          if (main.length > 6)
+            return { error: `Account main "${main}" too long (max 6 digits).` };
+          const branch = pad(b, 3);
+          const scheme = pad(s, 4);
+          const subPad = pad(sub, 2);
+          const mainPad = pad(main, 6);
+          const account = subPad + mainPad; // 8 digits
+          const full = branch + scheme + account;
+          if (full.length !== 15)
+            return { error: "Could not form 15-digit number." };
+          return {
+            branch,
+            scheme,
+            account,
+            type: "Divided Format (B/S/D/N)",
+            typeKey: "divided",
+            full,
+            sub: subPad,
+            main: mainPad,
+          };
+        }
+
+        return {
+          error:
+            "Too many parts. Use: branch/scheme/account or branch/scheme/division/number.",
+        };
+      }
+
+      /* ═══════════════════════════════════════════
+   DOM REFS
+═══════════════════════════════════════════ */
+      const $ = (id) => document.getElementById(id);
+      const input = $("acctInput");
+      const searchbar = $("searchbar");
+      const clearBtn = $("clearBtn");
+      const digitBadge = $("digitBadge");
+      const detectRow = $("detectRow");
+      const detectIcon = $("detectIcon");
+      const detectText = $("detectText");
+      const detectTag = $("detectTag");
+      const errorRow = $("errorRow");
+      const errorTxt = $("errorText");
+      const resultCard = $("resultCard");
+      const numFull = $("numFull");
+      const bkBranch = $("bkBranch");
+      const bkScheme = $("bkScheme");
+      const bkAcct = $("bkAcct");
+      const dividedNote = $("dividedNote");
+      const copyBtn = $("copyBtn");
+      const copyIcon = $("copyIcon");
+      const copyLabel = $("copyLabel");
+      const histBody = $("histBody");
+      const histAllBody = $("histAllBody");
+      const histCount = $("histCount");
+      const histFooter = $("histFooter");
+      const histAll = $("histAll");
+      const showAllBtn = $("showAllBtn");
+      const hclearBtn = $("hclearBtn");
+      const exGrid = $("exGrid");
+      const convertBtn = $("convertBtn");
+      const resetBtn = $("resetBtn");
+      const themeBtn = $("themeBtn");
+
+      let currentResult = null;
+
+      /* ═══════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════ */
+      const HIST_KEY = "acctfind_v3";
+      const MAX_HIST = 10;
+      const SHOW_INIT = 5;
+
+      function loadHist() {
+        try {
+          return JSON.parse(localStorage.getItem(HIST_KEY) || "[]");
+        } catch {
+          return [];
+        }
+      }
+      function saveHist(h) {
+        try {
+          localStorage.setItem(HIST_KEY, JSON.stringify(h));
+        } catch {}
+      }
+
+      function addHist(inputVal, result) {
+        let h = loadHist();
+        h = h.filter((x) => x.input !== inputVal);
+        h.unshift({
+          input: inputVal,
+          output: result.full,
+          key: result.typeKey,
+        });
+        saveHist(h.slice(0, MAX_HIST));
+        renderHist();
+      }
+
+      function makeHistItem(item) {
+        const div = document.createElement("div");
+        div.className = "h-item";
+        div.innerHTML = `
+    <span class="h-input">${item.input}</span>
+    <span class="h-arrow">→</span>
+    <span class="h-output">${item.output}</span>
+    <span class="h-reuse" title="Reuse this">↗</span>`;
+        div.addEventListener("click", () => {
+          input.value = item.input;
+          handleInput();
+          doConvert();
+        });
+        return div;
+      }
+
+      function renderHist() {
+        const h = loadHist();
+        histCount.textContent = h.length;
+        histBody.innerHTML = "";
+        histAllBody.innerHTML = "";
+
+        if (!h.length) {
+          histBody.innerHTML =
+            '<div class="history-empty"><span>🗂️</span>No recent lookups yet.</div>';
+          histFooter.style.display = "none";
+          return;
+        }
+
+        h.slice(0, SHOW_INIT).forEach((item) =>
+          histBody.appendChild(makeHistItem(item)),
+        );
+
+        const rest = h.slice(SHOW_INIT);
+        if (rest.length) {
+          histFooter.style.display = "flex";
+          rest.forEach((item) => histAllBody.appendChild(makeHistItem(item)));
+        } else {
+          histFooter.style.display = "none";
+        }
+      }
+
+      showAllBtn.addEventListener("click", () => {
+        const open = histAll.classList.toggle("open");
+        showAllBtn.classList.toggle("expanded", open);
+        showAllBtn.querySelector("span").textContent = open
+          ? "Collapse"
+          : "View All History";
+      });
+      hclearBtn.addEventListener("click", () => {
+        saveHist([]);
+        renderHist();
+      });
+
+      /* ═══════════════════════════════════════════
+   UI
+═══════════════════════════════════════════ */
+      const TYPE_META = {
+        full: {
+          icon: "✅",
+          text: "Recognized as complete 15-digit account number.",
+          tag: "Full Number",
+        },
+        raw: {
+          icon: "🔢",
+          text: "Raw digits — smart split applied (3 + 4 + 8).",
+          tag: "Raw Number",
+        },
+        standard: {
+          icon: "📋",
+          text: "Standard 3-part: Branch / Scheme / Account.",
+          tag: "Standard",
+        },
+        divided: {
+          icon: "✂️",
+          text: "Divided account: Branch / Scheme / Sub / Main.",
+          tag: "Divided Format",
+        },
+        two: {
+          icon: "🔗",
+          text: "Two-part input — scheme+account auto-split.",
+          tag: "Two-Part",
+        },
+      };
+
+      function showError(msg) {
+        errorTxt.textContent = msg;
+        errorRow.classList.add("show");
+        searchbar.classList.add("has-error");
+        searchbar.classList.remove("has-ok");
+        detectRow.classList.remove("show");
+      }
+      function hideError() {
+        errorRow.classList.remove("show");
+        searchbar.classList.remove("has-error");
+      }
+      function hideResult() {
+        resultCard.classList.remove("show");
+        currentResult = null;
+      }
+
+      function showResult(result) {
+        currentResult = result;
+        numFull.innerHTML =
+          `<span class="ns-branch">${result.branch}</span>` +
+          `<span class="ns-dot">·</span>` +
+          `<span class="ns-scheme">${result.scheme}</span>` +
+          `<span class="ns-dot">·</span>` +
+          `<span class="ns-acct">${result.account}</span>`;
+        bkBranch.textContent = result.branch;
+        bkScheme.textContent = result.scheme;
+        bkAcct.textContent = result.account;
+
+        if (result.typeKey === "divided") {
+          dividedNote.textContent = `÷ Division sub-part [${result.sub}] + main [${result.main}] = account [${result.account}]`;
+          dividedNote.classList.add("show");
+        } else {
+          dividedNote.classList.remove("show");
+        }
+
+        const meta = TYPE_META[result.typeKey] || {
+          icon: "🔍",
+          text: "Pattern detected.",
+          tag: result.type,
+        };
+        detectIcon.textContent = meta.icon;
+        detectText.textContent = meta.text;
+        detectTag.textContent = meta.tag;
+        detectRow.classList.add("show");
+
+        searchbar.classList.add("has-ok");
+        searchbar.classList.remove("has-error");
+        hideError();
+
+        copyBtn.classList.remove("copied");
+        copyIcon.textContent = "📋";
+        copyLabel.textContent = "Copy Full Account Number";
+
+        resultCard.classList.add("show");
+        setTimeout(
+          () =>
+            resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          80,
+        );
+      }
+
+      /* ═══════════════════════════════════════════
+   INPUT HANDLING (live)
+═══════════════════════════════════════════ */
+      function handleInput() {
+        const val = input.value.trim();
+        clearBtn.classList.toggle("show", val.length > 0);
+        const digits = val.replace(/\D/g, "");
+        if (digits.length) {
+          digitBadge.textContent = digits.length + "d";
+          digitBadge.classList.add("show");
+        } else {
+          digitBadge.classList.remove("show");
+        }
+
+        if (!val) {
+          hideError();
+          detectRow.classList.remove("show");
+          searchbar.classList.remove("has-ok", "has-error");
+          hideResult();
+          return;
+        }
+
+        const result = parse(val);
+        if (!result) {
+          hideError();
+          detectRow.classList.remove("show");
+          return;
+        }
+
+        if (result.error) {
+          hideResult();
+          detectRow.classList.remove("show");
+          if (digits.length > 4) {
+            showError(result.error);
+          } else {
+            hideError();
+            searchbar.classList.remove("has-ok", "has-error");
+          }
+          return;
+        }
+
+        showResult(result);
+      }
+
+      /* ═══════════════════════════════════════════
+   CONVERT (explicit)
+═══════════════════════════════════════════ */
+      function doConvert() {
+        const val = input.value.trim();
+        if (!val) {
+          showError("Please enter an account number.");
+          return;
+        }
+        const result = parse(val);
+        if (!result || result.error) {
+          showError((result && result.error) || "Could not parse input.");
+          hideResult();
+          return;
+        }
+        showResult(result);
+        addHist(val, result);
+      }
+
+      convertBtn.addEventListener("click", doConvert);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doConvert();
+      });
+      input.addEventListener("input", handleInput);
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        input.focus();
+        handleInput();
+      });
+      resetBtn.addEventListener("click", () => {
+        input.value = "";
+        input.focus();
+        handleInput();
+        hideResult();
+        hideError();
+      });
+
+      /* ═══════════════════════════════════════════
+   COPY
+═══════════════════════════════════════════ */
+      function onCopied() {
+        copyBtn.classList.add("copied");
+        copyIcon.textContent = "✅";
+        copyLabel.textContent = "Copied!";
+        setTimeout(() => {
+          copyBtn.classList.remove("copied");
+          copyIcon.textContent = "📋";
+          copyLabel.textContent = "Copy Full Account Number";
+        }, 2200);
+      }
+      copyBtn.addEventListener("click", () => {
+        if (!currentResult) return;
+        const t = currentResult.full;
+        if (navigator.clipboard)
+          navigator.clipboard
+            .writeText(t)
+            .then(onCopied)
+            .catch(() => fbCopy(t));
+        else fbCopy(t);
+      });
+      function fbCopy(t) {
+        const ta = document.createElement("textarea");
+        ta.value = t;
+        ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          onCopied();
+        } catch {}
+        document.body.removeChild(ta);
+      }
+
+      /* ═══════════════════════════════════════════
+   EXAMPLES
+═══════════════════════════════════════════ */
+      const EXAMPLES = [
+        { input: "21/31/4555", label: "Standard B/S/A" },
+        { input: "21/717/2/3455", label: "Divided format" },
+        { input: "21/365/1/9009", label: "Divided format" },
+        { input: "21/1315/4590", label: "4-digit scheme" },
+        { input: "21-31-4555", label: "Dash separator" },
+        { input: "021071702003455", label: "Full 15-digit" },
+      ];
+      (function buildExamples() {
+        exGrid.innerHTML = "";
+        EXAMPLES.forEach((ex) => {
+          const r = parse(ex.input);
+          const div = document.createElement("div");
+          div.className = "ex-item";
+          div.innerHTML = `
+      <div class="ex-inp">${ex.input}</div>
+      <div class="ex-out">${r && !r.error ? r.full : "—"}</div>
+      <div class="ex-lbl">${ex.label}</div>`;
+          div.addEventListener("click", () => {
+            input.value = ex.input;
+            handleInput();
+            doConvert();
+            input.scrollIntoView({ behavior: "smooth", block: "center" });
+          });
+          exGrid.appendChild(div);
+        });
+      })();
+
+      /* ═══════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════ */
+      function applyTheme(dark) {
+        document.documentElement.setAttribute(
+          "data-theme",
+          dark ? "dark" : "light",
+        );
+        themeBtn.textContent = dark ? "☀️" : "🌙";
+        try {
+          localStorage.setItem("acctfind_theme", dark ? "dark" : "light");
+        } catch {}
+      }
+      themeBtn.addEventListener("click", () => {
+        applyTheme(
+          document.documentElement.getAttribute("data-theme") !== "dark",
+        );
+      });
+      try {
+        if (localStorage.getItem("acctfind_theme") === "dark") applyTheme(true);
+      } catch {}
+
+      /* INIT */
+      renderHist();
+      input.focus();
+    </script>
+  </body>
+</html>

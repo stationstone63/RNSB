@@ -182,63 +182,8 @@
             <button class="mobile-search-btn" onclick="openSearch()">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
-            <button class="mobile-menu-btn" onclick="openMobileMenu()">
-              <i class="fa-solid fa-bars"></i>
-            </button>
           </div>
         </header>
-
-        <!-- MOBILE DRAWER -->
-        <div class="mobile-drawer-overlay" id="mobileDrawerOverlay" onclick="closeMobileMenu()"></div>
-        <div class="mobile-drawer" id="mobileDrawer">
-          <div class="mobile-drawer-header">
-            <div class="mobile-drawer-logo">
-              <i class="fa-solid fa-building-columns"></i>
-            </div>
-            <div class="mobile-drawer-title">
-              <div>RNSB</div>
-              <div class="mobile-drawer-sub">Employee Portal</div>
-            </div>
-            <button class="mobile-drawer-close" onclick="closeMobileMenu()">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-          <div class="mobile-drawer-nav">
-            <div class="mobile-drawer-section-label">Structure</div>
-            <button class="mobile-drawer-item" onclick="closeMobileMenu(); navTo('hierarchy')">
-              <div class="mobile-drawer-item-icon" style="background:rgba(26,64,128,0.1);color:var(--royal)">
-                <i class="fa-solid fa-sitemap"></i>
-              </div>
-              <div class="mobile-drawer-item-text">
-                <span>🗂️ Hierarchy</span>
-                <small>Employee organizational chart</small>
-              </div>
-              <i class="fa-solid fa-chevron-right" style="color:var(--gray-300);font-size:11px"></i>
-            </button>
-            <div class="mobile-drawer-section-label">Workflows</div>
-            <button class="mobile-drawer-item" onclick="closeMobileMenu(); navTo('cashier')">
-              <div class="mobile-drawer-item-icon" style="background:rgba(15,124,74,0.1);color:var(--success)">
-                <i class="fa-solid fa-cash-register"></i>
-              </div>
-              <div class="mobile-drawer-item-text">
-                <span>🧾 Cashier</span>
-                <small>Transaction codes &amp; guides</small>
-              </div>
-              <i class="fa-solid fa-chevron-right" style="color:var(--gray-300);font-size:11px"></i>
-            </button>
-            <div class="mobile-drawer-section-label">Training</div>
-            <button class="mobile-drawer-item" onclick="closeMobileMenu(); window.location.href='https://stationstone63.github.io/RNSB/rbi-exam.html'">
-              <div class="mobile-drawer-item-icon" style="background:rgba(200,151,31,0.12);color:var(--gold)">
-                <i class="fa-solid fa-graduation-cap"></i>
-              </div>
-              <div class="mobile-drawer-item-text">
-                <span>📚 Exam</span>
-                <small>RBI exam training</small>
-              </div>
-              <i class="fa-solid fa-chevron-right" style="color:var(--gray-300);font-size:11px"></i>
-            </button>
-          </div>
-        </div>
 
         <div class="page-content">
           <!-- HOME -->
@@ -931,39 +876,60 @@
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
           <div class="bottom-nav-inner">
-            <button class="bnav-item active" id="bnav-home" onclick="navTo('home')">
+            <button
+              class="bnav-item active"
+              id="bnav-home"
+              onclick="navTo('home')"
+            >
               <i class="fa-solid fa-house"></i>Home
             </button>
             <button class="bnav-item" id="bnav-bank" onclick="navTo('bank')">
               <i class="fa-solid fa-building-columns"></i>Bank
             </button>
+            <button
+              class="bnav-item"
+              id="bnav-hierarchy"
+              onclick="navTo('hierarchy')"
+            >
+              <i class="fa-solid fa-sitemap"></i>Hierarchy
+            </button>
             <button class="bnav-item" id="bnav-role" onclick="navTo('role')">
               <i class="fa-solid fa-id-badge"></i>Roles
             </button>
-            <button class="bnav-item" id="bnav-accounts" onclick="navTo('accounts')">
+            <button
+              class="bnav-item"
+              id="bnav-cashier"
+              onclick="navTo('cashier')"
+            >
+              <i class="fa-solid fa-cash-register"></i>Cashier
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-accounts"
+              onclick="navTo('accounts')"
+            >
               <i class="fa-solid fa-book"></i>Accounts
             </button>
-            <button class="bnav-item" id="bnav-account-finder" onclick="window.location.href = 'account-finder.html'">
-              <i class="fa-solid fa-magnifying-glass"></i>Finder
+            <button
+              class="bnav-item"
+              id="bnav-exam"
+              onclick="
+                window.location.href =
+                  'https://stationstone63.github.io/RNSB/rbi-exam.html'
+              "
+            >
+              <i class="fa-solid fa-graduation-cap"></i>Exam
+            </button>
+            <button
+              class="bnav-item"
+              id="bnav-account-finder"
+              onclick="window.location.href = 'account-finder.html'"
+            >
+              <i class="fa-solid fa-passport"></i>Finder
             </button>
           </div>
         </nav>
       </div>
-    </div>
-
-    <!-- GL ACCOUNT DETAIL PANEL -->
-    <div class="gl-panel-overlay" id="glPanelOverlay" onclick="closeGLPanel()"></div>
-    <div class="gl-panel" id="glPanel">
-      <div class="gl-panel-header">
-        <div class="gl-panel-header-left">
-          <div class="gl-panel-badge" id="glPanelBadge"></div>
-          <span class="gl-panel-type-label">Loan Account</span>
-        </div>
-        <button class="gl-panel-close" onclick="closeGLPanel()">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="gl-panel-body" id="glPanelBody"></div>
     </div>
 
     <div class="toast" id="toast"></div>

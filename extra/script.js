@@ -1395,17 +1395,6 @@ function filterLoanAccounts() {
   loanSearchQuery = document
     .getElementById("accountsSearchInput")
     .value.toLowerCase();
-  const clearBtn = document.getElementById("accountsSearchClear");
-  if (clearBtn) clearBtn.style.display = loanSearchQuery ? "flex" : "none";
-  renderLoanAccounts();
-}
-
-function clearAccountsSearch() {
-  const input = document.getElementById("accountsSearchInput");
-  const clearBtn = document.getElementById("accountsSearchClear");
-  if (input) input.value = "";
-  if (clearBtn) clearBtn.style.display = "none";
-  loanSearchQuery = "";
   renderLoanAccounts();
 }
 
@@ -1431,107 +1420,23 @@ function renderLoanAccounts() {
   grid.innerHTML = filtered
     .map(
       (s) => `
-      <div class="loan-account-card gl-card" onclick="openGLPanel('${s.gl}')">
-        <div class="gl-card-code">${s.gl}</div>
-        <div class="gl-card-hint">Tap for details</div>
+      <div class="loan-account-card">
+        <div class="loan-account-header">
+          <span class="loan-badge">🧾 ${s.desc}</span>
+        </div>
+        <div class="loan-account-body">
+          <div class="loan-detail">
+            <span class="loan-detail-label">🔢 Scheme Code</span>
+            <span class="loan-detail-value scheme-code">${s.code}</span>
+          </div>
+          <div class="loan-detail">
+            <span class="loan-detail-label">🏷️ GL Code</span>
+            <span class="loan-detail-value old-gl">${s.gl}</span>
+          </div>
+        </div>
       </div>`,
     )
     .join("");
-}
-
-/* ============================================================
-   GL ACCOUNT DETAIL PANEL
-============================================================ */
-function openGLPanel(gl) {
-  const scheme = LOAN_SCHEMES.find(s => s.gl === gl);
-  if (!scheme) return;
-
-  // Determine account type from description
-  let accountType = "Loan Account";
-  const desc = scheme.desc.toLowerCase();
-  if (desc.includes("gold")) accountType = "Gold Loan";
-  else if (desc.includes("staff")) accountType = "Staff Loan";
-  else if (desc.includes("education")) accountType = "Education Loan";
-  else if (desc.includes("fixed deposit") || desc.includes("fd")) accountType = "FD-Linked Loan";
-  else if (desc.includes("overdue")) accountType = "Overdue Loan";
-  else if (desc.includes("h.o.")) accountType = "Head Office Loan";
-  else if (desc.includes("housing")) accountType = "Housing Loan";
-  else if (desc.includes("surety")) accountType = "Surety Loan";
-  else if (desc.includes("industrial")) accountType = "Industrial Loan";
-  else if (desc.includes("agriculture")) accountType = "Agriculture Loan";
-  else if (desc.includes("solar")) accountType = "Solar Loan";
-  else if (desc.includes("vehicle") || desc.includes("bike") || desc.includes("car")) accountType = "Vehicle Loan";
-  else if (desc.includes("covid")) accountType = "COVID Relief Loan";
-  else if (desc.includes("mortgage")) accountType = "Mortgage Loan";
-  else if (desc.includes("solar")) accountType = "Solar Loan";
-
-  // Pick color based on type
-  let color = "var(--royal)", bg = "rgba(26,64,128,0.1)", icon = "fa-file-invoice-dollar";
-  if (accountType === "Gold Loan") { color="#c8971f"; bg="rgba(200,151,31,0.12)"; icon="fa-coins"; }
-  else if (accountType === "Staff Loan") { color="var(--wa-green)"; bg="rgba(18,140,126,0.1)"; icon="fa-id-badge"; }
-  else if (accountType === "Education Loan") { color="#7c3aed"; bg="rgba(124,58,237,0.1)"; icon="fa-graduation-cap"; }
-  else if (accountType === "Overdue Loan") { color="var(--warning)"; bg="rgba(194,95,10,0.1)"; icon="fa-triangle-exclamation"; }
-  else if (accountType === "Vehicle Loan") { color="#0a5f8a"; bg="rgba(10,95,138,0.1)"; icon="fa-car"; }
-  else if (accountType === "Housing Loan") { color="var(--success)"; bg="rgba(15,124,74,0.1)"; icon="fa-house"; }
-  else if (accountType === "Agriculture Loan") { color="#4a7c59"; bg="rgba(74,124,89,0.1)"; icon="fa-seedling"; }
-  else if (accountType === "COVID Relief Loan") { color="#c41e3a"; bg="rgba(196,30,58,0.1)"; icon="fa-virus"; }
-
-  document.getElementById("glPanelBadge").textContent = "GL " + scheme.gl;
-  document.getElementById("glPanelBadge").style.background = bg;
-  document.getElementById("glPanelBadge").style.color = color;
-
-  document.getElementById("glPanelBody").innerHTML = `
-    <div class="gl-detail-hero" style="background:${bg};border:1px solid ${color}22">
-      <div class="gl-detail-icon" style="background:${bg};color:${color}">
-        <i class="fa-solid ${icon}"></i>
-      </div>
-      <div class="gl-detail-hero-name">${scheme.desc}</div>
-      <div class="gl-detail-hero-type" style="color:${color}">${accountType}</div>
-    </div>
-    <div class="gl-detail-rows">
-      <div class="gl-detail-row">
-        <div class="gl-detail-row-label">🏷️ GL Code</div>
-        <div class="gl-detail-row-value mono" style="color:${color}">${scheme.gl}</div>
-      </div>
-      <div class="gl-detail-row">
-        <div class="gl-detail-row-label">🔢 Scheme Code</div>
-        <div class="gl-detail-row-value mono">${scheme.code}</div>
-      </div>
-      <div class="gl-detail-row">
-        <div class="gl-detail-row-label">📋 Account Name</div>
-        <div class="gl-detail-row-value">${scheme.desc}</div>
-      </div>
-      <div class="gl-detail-row">
-        <div class="gl-detail-row-label">🏦 Account Type</div>
-        <div class="gl-detail-row-value">${accountType}</div>
-      </div>
-    </div>
-    <div class="gl-detail-copy-row">
-      <button class="gl-copy-btn" onclick="copyGLCode('${scheme.gl}')">
-        <i class="fa-solid fa-copy"></i> Copy GL Code
-      </button>
-      <button class="gl-copy-btn scheme" onclick="copySchemeCode('${scheme.code}')">
-        <i class="fa-solid fa-copy"></i> Copy Scheme Code
-      </button>
-    </div>
-  `;
-
-  document.getElementById("glPanelOverlay").classList.add("open");
-  document.getElementById("glPanel").classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-
-function closeGLPanel() {
-  document.getElementById("glPanelOverlay").classList.remove("open");
-  document.getElementById("glPanel").classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-function copyGLCode(gl) {
-  navigator.clipboard.writeText(gl).then(() => showToast("✅ GL Code " + gl + " copied")).catch(() => showToast("GL: " + gl));
-}
-function copySchemeCode(code) {
-  navigator.clipboard.writeText(code).then(() => showToast("✅ Scheme Code " + code + " copied")).catch(() => showToast("Scheme: " + code));
 }
 
 // Initialize Accounts screen on show
@@ -1543,29 +1448,3 @@ setScreen = function (name) {
     renderLoanAccounts();
   }
 };
-
-/* ============================================================
-   MOBILE DRAWER
-============================================================ */
-function openMobileMenu() {
-  document.getElementById("mobileDrawer").classList.add("open");
-  document.getElementById("mobileDrawerOverlay").classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-function closeMobileMenu() {
-  document.getElementById("mobileDrawer").classList.remove("open");
-  document.getElementById("mobileDrawerOverlay").classList.remove("open");
-  document.body.style.overflow = "";
-}
-
-// Handle Android back button for panels
-window.addEventListener("popstate", function(e) {
-  if (document.getElementById("glPanel").classList.contains("open")) {
-    closeGLPanel();
-    return;
-  }
-  if (document.getElementById("mobileDrawer").classList.contains("open")) {
-    closeMobileMenu();
-    return;
-  }
-});
